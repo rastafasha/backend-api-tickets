@@ -24,6 +24,7 @@ class EventoResource extends JsonResource
             "precio_especialista"=>$this->resource->precio_especialista,
             "avatar"=> $this->resource->avatar ? env("APP_URL")."storage/".$this->resource->avatar : null,
             // "avatar"=> $this->resource->avatar ? env("APP_URL").$this->resource->avatar : null,
+            
             "fecha_inicio"=>$this->resource->fecha_inicio ? Carbon::parse($this->resource->fecha_inicio)->format("Y/m/d") : NULL,
             "fecha_fin"=>$this->resource->fecha_fin ? Carbon::parse($this->resource->fecha_inicio)->format("Y/m/d") : NULL,
             

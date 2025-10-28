@@ -44,9 +44,9 @@ class PermissionsSeeder extends Seeder
         // $role3 = Role::create(['guard_name' => 'api','name' => 'SUPERADMIN']);
         // gets all permissions via Gate::before rule; see AuthServiceProvider
 
-        // $role4 = Role::create(['guard_name' => 'parent-api', 'name' => 'GUEST']);
+        $role4 = Role::create(['guard_name' => 'parent-api', 'name' => 'GUEST']);
+        $role4 = Role::create(['guard_name' => 'parent-api', 'name' => 'CLIENT']);
 
-        // $role5 = Role::create(['guard_name' => 'api', 'name' => 'PARTNER']);
 
         // create demo users
         // $user = \App\Models\User::factory()->create([

@@ -56,21 +56,16 @@ Route::group(['middleware' => 'api'], function ($router) {
     require __DIR__ . '/api_routes/sliders.php';
 
     
-    // proveedor
-    require __DIR__ . '/api_routes/proveedor.php';
-    
     // payment
     require __DIR__ . '/api_routes/payment.php';
     
     // paymentMethod
     require __DIR__ . '/api_routes/paymentMethod.php';
     
-    // parent
-    require __DIR__ . '/api_routes/parent.php';
+    // client
+    require __DIR__ . '/api_routes/client.php';
     
-    // student
-    require __DIR__ . '/api_routes/student.php';
-    
+   
     // tasabcv
     require __DIR__ . '/api_routes/tasabcv.php';
     // moroso
@@ -79,13 +74,7 @@ Route::group(['middleware' => 'api'], function ($router) {
     // admindashboard
     require __DIR__ . '/api_routes/admindashboard.php';
     
-    // materias
-    require __DIR__ . '/api_routes/materias.php';
-    // calificaciones
-    require __DIR__ . '/api_routes/calificaciones.php';
     
-    // examen
-    require __DIR__ . '/api_routes/examen.php';
     
     // category
     require __DIR__ . '/api_routes/category.php';
@@ -93,11 +82,6 @@ Route::group(['middleware' => 'api'], function ($router) {
     // blog
     require __DIR__ . '/api_routes/blog.php';
     
-    // calendariotarea
-    require __DIR__ . '/api_routes/calendariotarea.php';
-    
-    // configuracion
-    require __DIR__ . '/api_routes/configuracion.php';
     // event
     require __DIR__ . '/api_routes/event.php';
     

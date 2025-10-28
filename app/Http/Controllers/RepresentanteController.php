@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\Representante\RepresntanteCollection;
 use App\Models\Cliente;
 use Illuminate\Http\Request;
-use App\Models\Representante;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
@@ -66,7 +66,9 @@ class RepresentanteController extends Controller
 
 
         return response()->json([
-            "cliente" => $cliente
+            "cliente" => $cliente,
+            // "cliente" => RepresntanteCollection::make($cliente),
+            // "cliente" => RepresntanteResource::make($cliente),
 
         ]);
     }

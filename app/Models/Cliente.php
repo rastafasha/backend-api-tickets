@@ -20,6 +20,7 @@ class Cliente extends Model implements JWTSubject, AuthenticatableContract
     use Authenticatable;
 
     protected $table = 'clientes';
+    protected $guard_name = 'parent-api';
 
    use HasApiTokens, HasFactory, Notifiable, HavePermission,  HasRoles;
     use SoftDeletes;
@@ -39,6 +40,7 @@ class Cliente extends Model implements JWTSubject, AuthenticatableContract
         'email',
         'password',
         'n_doc',
+        'role',
         //
         'surname',
         'mobile',
@@ -72,7 +74,9 @@ class Cliente extends Model implements JWTSubject, AuthenticatableContract
     ];
 
     const GUEST = 'GUEST';
+    const CLIENT = 'CLIENT';
 
+    
     public function setCreatedAtAttribute($value)
     {
     	date_default_timezone_set('America/Caracas');
@@ -95,6 +99,10 @@ class Cliente extends Model implements JWTSubject, AuthenticatableContract
     public function isGuest()
     {
         return $this->role === Cliente::GUEST;
+    }
+    public function isClient()
+    {
+        return $this->role === Cliente::CLIENT;
     }
 
     public function getJWTIdentifier()

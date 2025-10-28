@@ -12,8 +12,8 @@ class Moroso extends Model
     protected $table = 'morosos';
 
     protected $fillable = [
-        'parent_id',
-        'student_id',
+        'client_id',
+        'event_id',
         'month',
         'year',
         'amount_due',
@@ -26,7 +26,7 @@ class Moroso extends Model
      */
     public function parent()
     {
-        return $this->belongsTo(Cliente::class, 'parent_id');
+        return $this->belongsTo(Cliente::class, 'client_id');
     }
 
     /**
@@ -34,7 +34,7 @@ class Moroso extends Model
      */
     public function student()
     {
-        return $this->belongsTo(Student::class, 'student_id');
+        return $this->belongsTo(Evento::class, 'event_id');
     }
 
     /**

@@ -26,7 +26,7 @@ class Evento extends Model
 
     public function user()
     {
-        return $this->belongsTo(Cliente::class, 'client_id');
+        return $this->belongsTo(Cliente::class, 'user_id');
     }
     public function clientes()
     {

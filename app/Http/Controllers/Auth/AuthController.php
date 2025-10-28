@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Models\Cliente;
-use App\Models\Representante;
 use Spatie\Permission\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -165,7 +164,7 @@ class AuthController extends Controller
             'n_doc' => 'required',
             'email' => 'required|string|email|max:100|unique:users',
             'password' => 'required|string|min:5',
-            'role' => Rule::in([Cliente::GUEST]),
+            'role' => Rule::in([Cliente::CLIENT]),
         ]);
         
 
@@ -173,22 +172,22 @@ class AuthController extends Controller
             return response()->json($validator->errors(), 422);
         }
 
-        $user = Cliente::create([
+        $cliente = Cliente::create([
             'name' => $request->name,
             'surname' => $request->surname,
             'email' => $request->email,
             'n_doc' => $request->n_doc,
             'password' => Hash::make($request->password),
-            'role' => Cliente::GUEST,
+            'role' => Cliente::CLIENT,
         ]);
 
-        $user->assignRole(Cliente::GUEST);
+        $cliente->assignRole(Cliente::CLIENT);
 
-       $token = JWTAuth::fromUser($user);
+       $token = JWTAuth::fromUser($cliente);
 
         return response()->json([
             'message' => 'User registered successfully',
-            'user' => $user,
+            'user' => $cliente,
             'access_token' => $token,
             'token_type' => 'Bearer',
         ], 201);

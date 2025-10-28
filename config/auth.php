@@ -49,7 +49,7 @@ return [
 
         'parent-api' => [
             'driver' => 'jwt',
-            'provider' => 'representantes',
+            'provider' => 'clientes',
             'hash' => false,
         ],
     ],
@@ -77,9 +77,9 @@ return [
             'model' => App\Models\User::class,
         ],
 
-        'representantes' => [
+        'clientes' => [
             'driver' => 'eloquent',
-            'model' => App\Models\Representante::class,
+            'model' => App\Models\Cliente::class,
         ],
     ],
 

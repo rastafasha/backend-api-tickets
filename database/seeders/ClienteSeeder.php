@@ -32,8 +32,12 @@ class ClienteSeeder extends Seeder
                 'gender' => $faker->randomElement(['1', '2']),
                 'address' => $faker->address,
                 'avatar' => null,
+
                 'status' => $faker->randomElement(['ACTIVE', 'INACTIVE']),
             ]);
+
+            // Assign GUEST role from parent-api guard
+            $cliente->assignRole('CLIENT');
 
             // Create up to 5 events for each Cliente
             $eventsCount = rand(1, 5);

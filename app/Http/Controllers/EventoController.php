@@ -8,7 +8,6 @@ use App\Models\Evento;
 use App\Models\Cliente;
 use App\Models\Payment;
 use Illuminate\Http\Request;
-use App\Models\Representante;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Resources\Evento\EventoResource;
 use App\Http\Resources\Evento\EventoCollection;

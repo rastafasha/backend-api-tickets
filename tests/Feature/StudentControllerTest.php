@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Models\Student;
 
 class StudentControllerTest extends TestCase
 {
@@ -13,13 +12,13 @@ class StudentControllerTest extends TestCase
     /** @test */
     public function it_registers_a_student_successfully()
     {
-        $parent = \App\Models\Representante::factory()->create();
+        $client = \App\Models\Cliente::factory()->create();
 
         $data = [
             'n_doc' => '123456789',
             'name' => 'Test Student',
             'birth_date' => '2000-01-01 00:00:00',
-            'parent_id' => $parent->id,
+            'client_id' => $client->id,
             'matricula' => 1000,
         ];
 
@@ -35,18 +34,18 @@ class StudentControllerTest extends TestCase
     /** @test */
     public function it_fails_to_register_duplicate_student()
     {
-        $parent = \App\Models\Representante::factory()->create();
+        $client = \App\Models\Cliente::factory()->create();
 
-        $student = \App\Models\Student::factory()->create([
+        $event = \App\Models\Evento::factory()->create([
             'n_doc' => '123456789',
-            'parent_id' => $parent->id,
+            'client_id' => $client->id,
         ]);
 
         $data = [
             'n_doc' => '123456789',
             'name' => 'Duplicate Student',
             'birth_date' => '2000-01-01 00:00:00',
-            'parent_id' => $parent->id,
+            'client_id' => $client->id,
             'matricula' => 1000,
         ];
 
