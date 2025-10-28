@@ -21,6 +21,7 @@ class CreateParentsTable extends Migration
             $table->string('mobile',  50)->nullable();
             $table->timestamp('birth_date')->nullable();
             $table->tinyInteger('gender')->nullable();
+            $table->text('company')->nullable();
             $table->text('address')->nullable();
             $table->string('avatar')->nullable();
             $table->string('n_doc', 50)->unique()->nullable();

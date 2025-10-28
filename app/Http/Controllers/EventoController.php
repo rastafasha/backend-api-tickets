@@ -86,7 +86,7 @@ class EventoController extends Controller
         $event = Evento::create($request->all());
 
         // Generate initial debt for the newly registered event
-        app(\App\Http\Controllers\Admin\AdminPaymentController::class)->generateInitialDebtForevent($event->id);
+        // app(\App\Http\Controllers\Admin\AdminPaymentController::class)->generateInitialDebtForevent($event->id);
 
         $request->request->add([
             "event_id" =>$event->id

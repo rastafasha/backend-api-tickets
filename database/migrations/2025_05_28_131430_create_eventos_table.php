@@ -17,6 +17,7 @@ class CreateEventosTable extends Migration
             $table->id();
             $table->string('name');
             $table->text('description')->nullable();
+            $table->text('company')->nullable();
             $table->timestamp('fecha_inicio');
             $table->timestamp('fecha_fin')->nullable();
             $table->double('precio_general', 15, 2);

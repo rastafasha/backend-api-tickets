@@ -11,8 +11,6 @@ class Evento extends Model
      protected $fillable=[
         'name',
         'description',
-        'n_doc',
-        'gender',
         'avatar',
         'client_id',
         'fecha_inicio',
@@ -22,6 +20,7 @@ class Evento extends Model
         'precio_especialistas',
         'user_id',
         'status',
+        'company',
     ];
 
 
