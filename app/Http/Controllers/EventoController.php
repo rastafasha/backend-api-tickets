@@ -246,4 +246,15 @@ class EventoController extends Controller
         return $event;
     }
 
+    public function activos(){
+        $eventos = Evento::where('status', 'ACTIVE')->orderBy('created_at', 'DESC')
+        ->get();
+
+        return response()->json([
+            'code' => 200,
+            'status' => 'success',
+            "eventos" => $eventos,
+        ], 200);
+    }
+
 }
