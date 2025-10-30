@@ -1,1 +1,4 @@
-- [x] Modify ClienteSeeder.php to assign 'GUEST' role to each created cliente
+- [x] Modify EventFactory.php to attach 5 clients per event using afterCreating in configure() method
+- [x] Modify ClienteSeeder.php line 43 to use many-to-many relationship
+- [x] Update Evento model clients() to specify column names
+- [x] Update Cliente model eventos() to specify column names

@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use Carbon\Carbon;
 use App\Models\Payment;
-use App\Models\Student;
 use App\Models\Tasabcv;
 use App\Helpers\Uploader;
 use Illuminate\Http\Request;
@@ -73,11 +72,11 @@ $status,
      * Creates a payment and updates status_deuda to PAID if amount equals debt.
      *
      * @param \Illuminate\Http\Request $request
-     * @param int $parent_id
-     * @param int $student_id
+     * @param int $client_id
+     * @param int $event_id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function payDebtForStudent(Request $request, $parent_id, $student_id)
+    public function payDebtForStudent(Request $request, $client_id, $event_id)
     {
 
 
@@ -111,8 +110,8 @@ $status,
         }
 
         // Calculate current debt for the student under the parent
-        $currentDebt = Payment::where('parent_id', $parent_id)
-            ->where('student_id', $student_id)
+        $currentDebt = Payment::where('client_id', $client_id)
+            ->where('event_id', $event_id)
             ->where(function ($query) {
                 $query->where('status_deuda', '!=', 'PAID')
                       ->where('status', '!=', 'PAID')
@@ -123,24 +122,24 @@ $status,
         // Debug logs for troubleshooting
         \Log::info("payDebtForStudent: originalMonto={$originalMonto}, adjustedMonto={$monto}, currentDebt={$currentDebt}, metodo={$metodo}");
 
-        if ($monto > $currentDebt) {
-            // Allow small floating point tolerance
-            if (($monto - $currentDebt) > 0.01) {
-                return response()->json(['error' => 'Payment amount exceeds current debt'], 400);
-            }
-        }
+        // if ($monto > $currentDebt) {
+        //     // Allow small floating point tolerance
+        //     if (($monto - $currentDebt) > 0.01) {
+        //         return response()->json(['error' => 'Payment amount exceeds current debt'], 400);
+        //     }
+        // }
 
         // Create new payment record
         $payment = new Payment();
-        $payment->parent_id = $parent_id;
-        $payment->student_id = $student_id;
+        $payment->client_id = $client_id;
+        $payment->event_id = $event_id;
         $payment->monto = $monto;
 
-        if ($metodo === 'Transferencia Dólares' || $metodo === 'Transferencia Bolívares' || $metodo === 'Pago Móvil') {
-            $payment->status_deuda = (abs($monto - $currentDebt) < 0.01) ? 'PAID' : 'PENDING';
-        } else {
-            $payment->status_deuda = (abs($monto - $currentDebt) < 0.01) ? 'PAID' : 'PENDING';
-        }
+        // if ($metodo === 'Transferencia Dólares' || $metodo === 'Transferencia Bolívares' || $metodo === 'Pago Móvil') {
+        //     $payment->status_deuda = (abs($monto - $currentDebt) < 0.01) ? 'PAID' : 'PENDING';
+        // } else {
+        //     $payment->status_deuda = (abs($monto - $currentDebt) < 0.01) ? 'PAID' : 'PENDING';
+        // }
 
         // $payment->status = 'PAID'; // Assuming payment status is PAID when payment is made
         $payment->metodo = $metodo;
@@ -153,10 +152,23 @@ $status,
         $payment->status = $request->status;
         $payment->save();
 
+        //agregamos el client_id y event_id a la relacion de eventos_clientes
+        
+        DB::table('eventos_clientes')->updateOrInsert(
+            [
+                'event_id' => $event_id,
+                'client_id' => $client_id
+            ],
+            [
+                'updated_at' => now(),
+                'created_at' => now()
+            ]
+        );  
+
         // Update existing unpaid debts by applying the payment amount
         $remainingAmount = $monto;
-        $unpaidDebts = Payment::where('parent_id', $parent_id)
-            ->where('student_id', $student_id)
+        $unpaidDebts = Payment::where('client_id', $client_id)
+            ->where('event_id', $event_id)
             ->where(function ($query) {
                 $query->where('status_deuda', '!=', 'PAID')
                       ->orWhere('status', 'PENDING');
@@ -172,7 +184,8 @@ $status,
             if ($debt->monto <= $remainingAmount) {
                 // Mark this debt as paid
                 $debt->status_deuda = 'PAID';
-                $debt->status = 'APPROVED';
+                // $debt->status = 'APPROVED';
+                $debt->status = 'PENDING';
                 $remainingAmount -= $debt->monto;
             } else {
                 // Partial payment: reduce the debt amount
@@ -326,7 +339,7 @@ $status,
         
         $payments = Payment::where("client_id", $client_id)
         ->orderBy('created_at', 'DESC')
-        ->with('student')
+        ->with('event')
         ->get();
 
         return response()->json([
@@ -339,9 +352,9 @@ $status,
 
    
 
-    public function pagosPendientesbyStudent(Request $request, $student_id)
+    public function pagosPendientesbyStudent(Request $request, $event_id)
     {
-        $payments = Payment::where("student_id", $student_id)
+        $payments = Payment::where("event_id", $event_id)
         ->orderBy('created_at', 'DESC')
         // ->with('student')
         ->get();
@@ -374,15 +387,15 @@ $status,
 
         // Only proceed if today is between 28-31 or 1-3 of the month
         if (($day >= 28 && $day <= 31) || ($day >= 1 && $day <= 3)) {
-            // Find students with pending enrollment payments or relevant criteria
-            $students = \App\Models\Student::whereHas('payments', function ($query) {
+            // Find eventos with pending enrollment payments or relevant criteria
+            $eventos = \App\Models\Evento::whereHas('payments', function ($query) {
                 $query->where('status_deuda', '!=', 'PAID');
             })->get();
 
-            foreach ($students as $student) {
-                $parent = $student->parent;
-                if ($parent && $parent->email) {
-                    Mail::to($parent->email)->send(new EnrollmentNotificationMail($student));
+            foreach ($eventos as $evento) {
+                $client = $evento->parent;
+                if ($client && $client->email) {
+                    Mail::to($client->email)->send(new EnrollmentNotificationMail($evento));
                 }
             }
 
@@ -401,34 +414,34 @@ $status,
     /**
      * Check if the representative (parent) and student have debt and the amount.
      *
-     * @param int $parent_id
-     * @param int $student_id
+     * @param int $client_id
+     * @param int $event_id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function checkDebtStatusByParent($parent_id)
+    public function checkDebtStatusByParent($client_id)
     {
         // Sum unpaid payments for the representative (parent)
-        $parentDebt = Payment::where('parent_id', $parent_id)
+        $clientDebt = Payment::where('parent_id', $client_id)
             ->where(function ($query) {
                 $query->where('status_deuda', '!=', 'PAID')
                       ->orWhere('status', '=','PENDING');
             })
             ->sum('monto');
 
-        // Get students with debt and their debt details
-        $studentsWithDebt = Payment::select('student_id', DB::raw('SUM(monto) as total_debt'), DB::raw('MIN(created_at) as earliest_debt_date'))
-            ->where('parent_id', $parent_id)
+        // Get eventos with debt and their debt details
+        $eventosWithDebt = Payment::select('event_id', DB::raw('SUM(monto) as total_debt'), DB::raw('MIN(created_at) as earliest_debt_date'))
+            ->where('parent_id', $client_id)
             ->where(function ($query) {
                 $query->where('status_deuda', '!=', 'PAID')
                       ->orWhere('status', '=','PENDING');
             })
-            ->groupBy('student_id')
+            ->groupBy('event_id')
             ->with('student:id,name,matricula') // assuming student has 'name' attribute
             ->get();
 
-        $studentsDebtDetails = $studentsWithDebt->map(function ($item) {
+        $eventosDebtDetails = $eventosWithDebt->map(function ($item) {
             return [
-                'student_id' => $item->student_id,
+                'event_id' => $item->event_id,
                 'student_name' => $item->student ? $item->student->name : null,
                 'matricula' => $item->student ? $item->student->matricula : null,
                 'debt_amount' => $item->total_debt,
@@ -437,16 +450,16 @@ $status,
         });
 
         return response()->json([
-            'parent_id' => $parent_id,
-            'parent_has_debt' => $parentDebt > 0,
-            'parent_debt_amount' => $parentDebt,
-            'students_with_debt' => $studentsDebtDetails,
+            'parent_id' => $client_id,
+            'parent_has_debt' => $clientDebt > 0,
+            'parent_debt_amount' => $clientDebt,
+            'eventos_with_debt' => $eventosDebtDetails,
         ]);
     }
-    public function checkDebtStatus($parent_id, $student_id)
+    public function checkDebtStatus($client_id, $event_id)
     {
         // Sum unpaid payments for the representative (parent)
-        $parentDebt = Payment::where('parent_id', $parent_id)
+        $clientDebt = Payment::where('parent_id', $client_id)
             ->where(function ($query) {
                 $query->where('status_deuda', '!=', 'PAID')
                       ->orWhere('status', '=','PENDING');
@@ -454,7 +467,7 @@ $status,
             ->sum('monto');
 
         // Sum unpaid payments for the student
-        $studentDebt = Payment::where('student_id', $student_id)
+        $eventoDebt = Payment::where('event_id', $event_id)
             ->where(function ($query) {
                 $query->where('status_deuda', '!=', 'PAID')
                       ->orWhere('status', '=','PENDING');
@@ -462,38 +475,38 @@ $status,
             ->sum('monto');
 
         return response()->json([
-            'parent_id' => $parent_id,
-            'student_id' => $student_id,
-            'parent_has_debt' => $parentDebt > 0,
-            'parent_debt_amount' => $parentDebt,
-            'student_has_debt' => $studentDebt > 0,
-            'student_debt_amount' => $studentDebt,
+            'parent_id' => $client_id,
+            'event_id' => $event_id,
+            'parent_has_debt' => $clientDebt > 0,
+            'parent_debt_amount' => $clientDebt,
+            'student_has_debt' => $eventoDebt > 0,
+            'student_debt_amount' => $eventoDebt,
         ]);
     }
 
     /**
      * View the debt of each student for a given parent (representative).
      *
-     * @param int $parent_id
+     * @param int $client_id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function viewDebtByParent($parent_id)
+    public function viewDebtByParent($client_id)
     {
-        // Get students of the parent with their total debt amount
-        $studentsWithDebt = Payment::select('student_id', DB::raw('SUM(monto) as total_debt'))
-            ->where('parent_id', $parent_id)
+        // Get eventos of the parent with their total debt amount
+        $eventosWithDebt = Payment::select('event_id', DB::raw('SUM(monto) as total_debt'))
+            ->where('parent_id', $client_id)
             ->where(function ($query) {
                 $query->where('status_deuda', '!=', 'PAID')
                 ->where('status','=',  'REJECTED')
                       ->orWhere('status','=', 'PENDING');
             })
-            ->groupBy('student_id')
+            ->groupBy('event_id')
             ->with('student:id,name,matricula') // assuming student has 'name' attribute
             ->get();
 
-        $studentsDebtDetails = $studentsWithDebt->map(function ($item) {
+        $eventosDebtDetails = $eventosWithDebt->map(function ($item) {
             return [
-                'student_id' => $item->student_id,
+                'event_id' => $item->event_id,
                 'student_name' => $item->student ? $item->student->name : null,
                 'matricula' => $item->student ? $item->student->matricula : null,
                 'debt_amount' => $item->total_debt,
@@ -501,8 +514,8 @@ $status,
         });
 
         return response()->json([
-            'parent_id' => $parent_id,
-            'students_with_debt' => $studentsDebtDetails,
+            'parent_id' => $client_id,
+            'eventos_with_debt' => $eventosDebtDetails,
         ]);
     }
 
@@ -511,8 +524,8 @@ $status,
      * Creates a payment and updates status_deuda to PAID if amount equals debt.
      *
      * @param \Illuminate\Http\Request $request
-     * @param int $parent_id
-     * @param int $student_id
+     * @param int $client_id
+     * @param int $event_id
      * @return \Illuminate\Http\JsonResponse
      */
     /**
@@ -533,18 +546,18 @@ $status,
             ]);
         }
 
-        // Get all students with their parent (representative)
-        $students = Student::with('parent')->get();
+        // Get all eventos with their parent (representative)
+        $eventos = Student::with('parent')->get();
 
-        foreach ($students as $student) {
-            $parent = $student->parent;
-            if (!$parent) {
+        foreach ($eventos as $evento) {
+            $client = $evento->parent;
+            if (!$client) {
                 continue;
             }
 
             // Check if a debt payment for this month already exists for this parent and student
-            $existingDebt = Payment::where('parent_id', $parent->id)
-                ->where('student_id', $student->id)
+            $existingDebt = Payment::where('parent_id', $client->id)
+                ->where('event_id', $evento->id)
                 ->whereDate('created_at', '>=', $now->startOfMonth())
                 ->whereDate('created_at', '<=', $now->endOfMonth())
                 ->where('status_deuda', '!=', 'PAID')
@@ -557,17 +570,17 @@ $status,
 
             // Create new debt payment for the parent's matricula amount
             $debtPayment = new Payment();
-            $debtPayment->parent_id = $parent->id;
-            $debtPayment->student_id = $student->id;
-            $debtPayment->monto = $student->matricula;
+            $debtPayment->parent_id = $client->id;
+            $debtPayment->event_id = $evento->id;
+            $debtPayment->monto = $evento->matricula;
             $debtPayment->status_deuda = 'DEUDA';
             $debtPayment->status = 'PENDING';
             $debtPayment->referencia = 'Monthly debt for ' . $now->format('F Y');
             $debtPayment->metodo = 'DEUDA';
             $debtPayment->bank_name = '';
             $debtPayment->bank_destino = '';
-            $debtPayment->nombre = $parent->name ?? '';
-            $debtPayment->email = $parent->email ?? '';
+            $debtPayment->nombre = $client->name ?? '';
+            $debtPayment->email = $client->email ?? '';
             $debtPayment->avatar = null;
             $debtPayment->save();
         }
@@ -581,23 +594,23 @@ $status,
     /**
      * Generate initial debt for a single student immediately upon registration.
      *
-     * @param int $studentId
+     * @param int $eventoId
      * @return void
      */
-    public function generateInitialDebtForStudent($studentId)
+    public function generateInitialDebtForStudent($eventoId)
     {
         $now = Carbon::now();
-        $student = Student::with('parent')->find($studentId);
+        $evento = Student::with('parent')->find($eventoId);
 
-        if (!$student || !$student->parent) {
+        if (!$evento || !$evento->parent) {
             return;
         }
 
-        $parent = $student->parent;
+        $client = $evento->parent;
 
         // Check if a debt payment for this month already exists for this parent and student
-        $existingDebt = Payment::where('parent_id', $parent->id)
-            ->where('student_id', $student->id)
+        $existingDebt = Payment::where('parent_id', $client->id)
+            ->where('event_id', $evento->id)
             ->whereDate('created_at', '>=', $now->startOfMonth())
             ->whereDate('created_at', '<=', $now->endOfMonth())
             ->where('status_deuda', '!=', 'PAID')
@@ -610,17 +623,17 @@ $status,
 
         // Create new debt payment for the parent's matricula amount
         $debtPayment = new Payment();
-        $debtPayment->parent_id = $parent->id;
-        $debtPayment->student_id = $student->id;
-        $debtPayment->monto = $student->matricula;
+        $debtPayment->parent_id = $client->id;
+        $debtPayment->event_id = $evento->id;
+        $debtPayment->monto = $evento->matricula;
         $debtPayment->status_deuda = 'DEUDA';
         $debtPayment->status = 'PENDING';
         $debtPayment->referencia = 'Initial debt for ' . $now->format('F Y');
         $debtPayment->metodo = 'DEUDA';
         $debtPayment->bank_name = '';
         $debtPayment->bank_destino = '';
-        $debtPayment->nombre = $parent->name ?? '';
-        $debtPayment->email = $parent->email ?? '';
+        $debtPayment->nombre = $client->name ?? '';
+        $debtPayment->email = $client->email ?? '';
         $debtPayment->avatar = null;
         $debtPayment->save();
     }

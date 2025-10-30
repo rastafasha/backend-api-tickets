@@ -28,7 +28,7 @@ class RepresentanteController extends Controller
                 $query->where('status_deuda', 'DEUDA')->select('id', 'client_id', 'status_deuda');
             }])
             ->with(['eventos' => function ($query) {
-                $query->select('id', 'client_id');
+                $query->select('client_id', 'client_id');
             }])
             ->get();
 

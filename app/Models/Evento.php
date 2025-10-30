@@ -12,12 +12,12 @@ class Evento extends Model
         'name',
         'description',
         'avatar',
-        'client_id',
         'fecha_inicio',
         'fecha_fin',
         'precio_general',
         'precio_estudiantes',
         'precio_especialistas',
+        'client_id',
         'user_id',
         'status',
         'company',
@@ -26,11 +26,19 @@ class Evento extends Model
 
     public function user()
     {
-        return $this->belongsTo(Cliente::class, 'user_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
-    public function clientes()
+    public function users()
     {
-        return $this->hasMany(Cliente::class);
+        return $this->belongsTo(User::class, 'user_id');
+    }
+    public function clients()
+    {
+        return $this->belongsToMany(Cliente::class, 'eventos_clientes', 'event_id', 'client_id');
+    }
+    public function client()
+    {
+        return $this->belongsTo(Cliente::class, 'client_id');
     }
 
 

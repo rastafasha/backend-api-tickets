@@ -25,4 +25,13 @@ class EventFactory extends Factory
             'avatar' => null,
         ];
     }
+
+    public function configure()
+    {
+        return $this->afterCreating(function (Evento $evento) {
+            $evento->clients()->attach(
+                Cliente::factory()->count(5)->create()
+            );
+        });
+    }
 }

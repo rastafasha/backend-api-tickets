@@ -125,7 +125,7 @@ class Cliente extends Model implements JWTSubject, AuthenticatableContract
 
     public function eventos()
     {
-        return $this->hasMany(Evento::class, 'client_id');
+        return $this->belongsToMany(Evento::class, 'eventos_clientes', 'client_id', 'event_id');
     }
     public function payments()
     {

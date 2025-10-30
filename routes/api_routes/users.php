@@ -21,11 +21,11 @@ Route::get('user/show/ndoc/{n_doc}', [AdminUserController::class, 'showNdoc'])
     ->name('user.showNdoc');
 
 
-Route::put('user/update/{user}', [AdminUserController::class, 'update'])
+Route::post('user/update/{user}', [AdminUserController::class, 'update'])
     ->name('user.update');
 
 Route::put('user/update-admin/{user}', [AdminUserController::class, 'userUpdate'])
-    ->name('user.update');
+    ->name('user.userUpdate');
 
 Route::delete('user/destroy/{user}', [AdminUserController::class, 'userDestroy'])
     ->name('user.destroy');

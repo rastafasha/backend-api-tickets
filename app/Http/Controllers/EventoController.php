@@ -84,14 +84,19 @@ class EventoController extends Controller
 
         $event = Evento::create($request->all());
 
+        // Attach clients if provided
+        if ($request->has('client_ids') && is_array($request->client_ids)) {
+            $event->clients()->attach($request->client_ids);
+        }
+
         // Generate initial debt for the newly registered event
         // app(\App\Http\Controllers\Admin\AdminPaymentController::class)->generateInitialDebtForevent($event->id);
 
         $request->request->add([
             "event_id" =>$event->id
         ]);
-        
-        
+
+
         return response()->json([
             "message"=>200,
         ]);
@@ -124,18 +129,16 @@ class EventoController extends Controller
        
     }
 
-    public function clientsbyEvent(Request $request, $id)
+    public function clientsbyEvent(Request $request, $event_id)
     {
-        $event = Evento::findOrFail($id);
-        $clientes = Cliente::where("id", $id)->orderBy('created_at', 'DESC')
-    
-        ->get();
+        $event = Evento::with('clients')->findOrFail($event_id);
+        // $clientes = $event->clients()->orderBy('created_at', 'DESC')->get();
 
         return response()->json([
             'code' => 200,
             'status' => 'success',
             'event' => $event,
-            "clientes" => $clientes,
+            // "clientes" => $clientes,
         ], 200);
     }
 
@@ -208,6 +211,11 @@ class EventoController extends Controller
         }
         
         $event->update($request->all());
+
+        // Sync clients if provided
+        if ($request->has('client_ids') && is_array($request->client_ids)) {
+            $event->clients()->sync($request->client_ids);
+        }
 
         return response()->json([
             "message"=>200,

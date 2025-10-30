@@ -56,28 +56,6 @@ class AdminUserController extends Controller
         ]);
     }
 
-    public function maestro()
-    {
-        
-        $users = User::orderBy('id', 'desc')
-        ->with('roles')
-        // ->with('materias')
-        ->where('name',  'MAESTRO')
-            ->get();
-        return response()->json([
-            
-            // "users" => $users,
-            "users" => $users->map(function($user) {
-                return [
-                    'id' => $user->id,
-                    'name' => $user->name,
-                    "surname" => $user->surname,
-                    "materia_id" => $user->materia_id
-                ];
-            })
-        ]);
-    }
-
 
 
 
@@ -117,6 +95,14 @@ class AdminUserController extends Controller
         }
         
         $user = User::findOrFail($id);
+
+        if($request->hasFile('imagen')){
+            if($user->avatar){
+                Storage::delete($user->avatar);
+            }
+            $path = Storage::putFile("users", $request->file('imagen'));
+            $request->request->add(["avatar"=>$path]);
+        }
         
         $user->update($request->all());
 
@@ -157,7 +143,8 @@ class AdminUserController extends Controller
 
         return response()->json([
             "message"=>200,
-            "user"=>$user
+            "user"=>$user,
+            // "user" => UserResource::make($user)
         ]);
     }
 

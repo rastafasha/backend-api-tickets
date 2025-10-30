@@ -21,7 +21,7 @@ class ClienteSeeder extends Seeder
 
         // Create 10 Clientes
         for ($i = 0; $i < 10; $i++) {
-            $cliente = Cliente::create([
+            $client = Cliente::create([
                 'name' => $faker->firstName,
                 'surname' => $faker->lastName,
                 'email' => $faker->unique()->safeEmail,
@@ -37,12 +37,12 @@ class ClienteSeeder extends Seeder
             ]);
 
             // Assign GUEST role from parent-api guard
-            $cliente->assignRole('CLIENT');
+            $client->assignRole('CLIENT');
 
             // Create up to 5 events for each Cliente
             $eventsCount = rand(1, 5);
             for ($j = 0; $j < $eventsCount; $j++) {
-                Evento::create([
+                $event = Evento::create([
                     'name' => $faker->firstName,
                     'precio_general' => 1000,
                     'precio_estudiantes' => 1000,
@@ -51,10 +51,10 @@ class ClienteSeeder extends Seeder
                     'fecha_fin' => $faker->date(),
                     'avatar' => null,
                     'user_id' => 4,
-                    'status' => $faker->randomElement(['ACTIVE', 'INACTIVE', 
+                    'status' => $faker->randomElement(['ACTIVE', 'INACTIVE',
                     'RETIRED','FINISHED']),
-                    'client_id' => $cliente->id,
                 ]);
+                $event->clients()->attach($client);
             }
         }
     }
