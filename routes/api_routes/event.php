@@ -14,10 +14,10 @@ Route::get('event/paymentbyid/{id}', [EventoController::class, 'paymentbyevent']
 Route::get('event/search/{request}', [EventoController::class, 'search'])
     ->name('event.search');
 
-Route::post('event/store', [EventoController::class, 'store'])->name('event.store');
+Route::any('event/store', [EventoController::class, 'eventstore'])->name('event.eventstore');
 
-Route::post('event/update/{student}', [EventoController::class, 'update'])->name('event.update');
-Route::post('event/updatestatus/admin/{student}', [EventoController::class, 'updateStatusAdmin'])->name('event.updateStatusAdmin');
+Route::any('event/update/{student}', [EventoController::class, 'update'])->name('event.update');
+Route::any('event/updatestatus/admin/{student}', [EventoController::class, 'updateStatusAdmin'])->name('event.updateStatusAdmin');
 
 Route::put('event/update/status/{student:id}', [EventoController::class, 'updateStatus'])
     ->name('event.updateStatus');

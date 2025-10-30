@@ -54,16 +54,30 @@ class EventoController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function eventstore(Request $request)
     {
         $event_is_valid = Evento::where("id", $request->id)->first();
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'fecha_inicio' => 'required|date',
+            'precio_general' => 'required|numeric|min:0',
+            'description' => 'nullable|string',
+            'company' => 'nullable|string',
+            'fecha_fin' => 'nullable|date|after_or_equal:fecha_inicio',
+            'precio_estudiantes' => 'nullable|numeric|min:0',
+            'precio_especialistas' => 'nullable|numeric|min:0',
+            'status' => 'nullable|in:ACTIVE,INACTIVE,RETIRED,FINISHED',
+            'user_id' => 'nullable|exists:users,id',
+        ]);
 
         if($event_is_valid){
             return response()->json([
                 "message"=>403,
-                "message_text"=> 'el paciente ya existe'
+                "message_text"=> 'el evento ya existe'
             ]);
         }
+
 
         if($request->hasFile('imagen')){
             $path = Storage::putFile("events", $request->file('imagen'));
@@ -80,29 +94,29 @@ class EventoController extends Controller
             $request->request->add(["fecha_fin" => Carbon::parse($date_clean)->format('Y-m-d h:i:s')]);
         }
         
-        $user_id = $request->user_id;
-        $event_id = $request->event_id;
-
-        
-        DB::table('eventos_users')->updateOrInsert(
-            [
-                'event_id' => $event_id,
-                'user_id' => $user_id
-            ],
-            [
-                'updated_at' => now(),
-                'created_at' => now()
-            ]
-        );  
-
         $event = Evento::create($request->all());
+
+        $user_id = $request->user_id;
+
+        if ($user_id) {
+            DB::table('eventos_users')->updateOrInsert(
+                [
+                    'event_id' => $event->id,
+                    'user_id' => $user_id
+                ],
+                [
+                    'updated_at' => now(),
+                    'created_at' => now()
+                ]
+            );
+        }
 
 
 
         // Attach clients if provided
-        if ($request->has('client_ids') && is_array($request->client_ids)) {
-            $event->clients()->attach($request->client_ids);
-        }
+        // if ($request->has('client_ids') && is_array($request->client_ids)) {
+        //     $event->clients()->attach($request->client_ids);
+        // }
 
         // Generate initial debt for the newly registered event
         // app(\App\Http\Controllers\Admin\AdminPaymentController::class)->generateInitialDebtForevent($event->id);

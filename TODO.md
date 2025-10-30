@@ -1,4 +1,5 @@
-- [x] Modify EventFactory.php to attach 5 clients per event using afterCreating in configure() method
-- [x] Modify ClienteSeeder.php line 43 to use many-to-many relationship
-- [x] Update Evento model clients() to specify column names
-- [x] Update Cliente model eventos() to specify column names
+# TODO: Fix MethodNotAllowedHttpException for Event Routes
+
+- [x] Update POST routes in `routes/api_routes/event.php` to use `Route::any()` for `event/store`, `event/update/{student}`, and `event/updatestatus/admin/{student}` to allow both GET and POST methods.
+- [ ] Test the updated routes to ensure they handle GET requests without exceptions.
+- [ ] If needed, adjust controller methods to handle GET parameters instead of POST data.

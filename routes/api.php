@@ -111,6 +111,10 @@ Route::group(['middleware' => 'api'], function ($router) {
         Artisan::call('migrate:refresh --seed');
         return "Migrate seed";
     });
+    Route::get('/route-clear', function () {
+    Artisan::call('route:clear');
+    return "Route cache cleared successfully.";
+});
     
     Route::get('/send-notification', function () {
         Artisan::call('command:notification-appointments');
