@@ -28,12 +28,12 @@ class CreateEventosTable extends Migration
                 'ACTIVE', 'INACTIVE','RETIRED','FINISHED'
                 ])->default('INACTIVE');
 
-            $table->unsignedBigInteger('user_id')->nullable();
+            // $table->unsignedBigInteger('user_id')->nullable();
 
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('user_id')->references('id')->on('users')->nullOnDelete();
+            // $table->foreign('user_id')->references('id')->on('users')->nullOnDelete();
         });
     }
 

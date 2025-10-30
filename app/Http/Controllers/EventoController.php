@@ -8,9 +8,8 @@ use App\Models\Evento;
 use App\Models\Cliente;
 use App\Models\Payment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use App\Http\Resources\Evento\EventoResource;
-use App\Http\Resources\Evento\EventoCollection;
 
 class EventoController extends Controller
 {
@@ -81,8 +80,24 @@ class EventoController extends Controller
             $request->request->add(["fecha_fin" => Carbon::parse($date_clean)->format('Y-m-d h:i:s')]);
         }
         
+        $user_id = $request->user_id;
+        $event_id = $request->event_id;
+
+        
+        DB::table('eventos_users')->updateOrInsert(
+            [
+                'event_id' => $event_id,
+                'user_id' => $user_id
+            ],
+            [
+                'updated_at' => now(),
+                'created_at' => now()
+            ]
+        );  
 
         $event = Evento::create($request->all());
+
+
 
         // Attach clients if provided
         if ($request->has('client_ids') && is_array($request->client_ids)) {
@@ -209,8 +224,25 @@ class EventoController extends Controller
             $date_clean = preg_replace('/\(.*\)|[A-Z]{3}-\d{4}/', '',$request->fecha_fin );
             $request->request->add(["fecha_fin" => Carbon::parse($date_clean)->format('Y-m-d h:i:s')]);
         }
+
+        $user_id = $request->user_id;
+        $event_id = $request->event_id;
+
+        
+        DB::table('eventos_users')->updateOrInsert(
+            [
+                'event_id' => $event_id,
+                'user_id' => $user_id
+            ],
+            [
+                'updated_at' => now(),
+                'created_at' => now()
+            ]
+        );  
         
         $event->update($request->all());
+
+        
 
         // Sync clients if provided
         if ($request->has('client_ids') && is_array($request->client_ids)) {

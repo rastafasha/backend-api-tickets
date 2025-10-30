@@ -3,7 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Evento;
-use App\Models\Cliente;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class EventFactory extends Factory
@@ -18,7 +18,7 @@ class EventFactory extends Factory
             'company' => $this->faker->company,
             'fecha_inicio' => $this->faker->dateTimeBetween('-30 months', '6 months'),
             'fecha_fin' => $this->faker->dateTimeBetween('-30 months', '6 months'),
-            'client_id' => Cliente::factory(),
+            // 'client_id' => User::factory(),
             'precio_general' => $this->faker->numberBetween(500, 2000),
             'precio_estudiantes' => $this->faker->numberBetween(500, 2000),
             'precio_especialistas' => $this->faker->numberBetween(500, 2000),
@@ -29,8 +29,8 @@ class EventFactory extends Factory
     public function configure()
     {
         return $this->afterCreating(function (Evento $evento) {
-            $evento->clients()->attach(
-                Cliente::factory()->count(5)->create()
+            $evento->users()->attach(
+                User::factory()->count(5)->create()
             );
         });
     }

@@ -135,9 +135,14 @@ class User extends Authenticatable implements JWTSubject
         ->get();
     }
 
-     public function eventos()
+    //  public function eventos()
+    // {
+    //     return $this->hasMany(Evento::class);
+    // }
+
+    public function eventos()
     {
-        return $this->hasMany(Evento::class);
+        return $this->belongsToMany(Evento::class, 'eventos_users', 'client_id', 'event_id');
     }
     
 

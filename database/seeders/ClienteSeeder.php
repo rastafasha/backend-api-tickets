@@ -50,7 +50,7 @@ class ClienteSeeder extends Seeder
                     'fecha_inicio' => $faker->date(),
                     'fecha_fin' => $faker->date(),
                     'avatar' => null,
-                    'user_id' => 4,
+                    // 'user_id' => 4,
                     'status' => $faker->randomElement(['ACTIVE', 'INACTIVE',
                     'RETIRED','FINISHED']),
                 ]);
