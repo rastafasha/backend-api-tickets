@@ -160,7 +160,9 @@ class EventoController extends Controller
 
     public function clientsbyEvent(Request $request, $event_id)
     {
-        $event = Evento::with('clients')->findOrFail($event_id);
+        $event = Evento::with(['clients' => function ($query) {
+            $query->withPivot('asistencia');
+        }])->findOrFail($event_id);
 
         return response()->json([
             'code' => 200,
@@ -269,6 +271,31 @@ class EventoController extends Controller
         if ($request->has('client_ids') && is_array($request->client_ids)) {
             $event->clients()->sync($request->client_ids);
         }
+
+        return response()->json([
+            "message"=>200,
+            "event"=>$event
+        ]);
+    }
+    public function asistencia(Request $request, $event_id, $client_id)
+    {
+
+        $event = Evento::findOrFail($event_id);
+
+        $asistencia = $request->asistencia;
+
+
+        DB::table('eventos_clientes')->updateOrInsert(
+            [
+                'event_id' => $event_id,
+                'client_id' => $client_id,
+            ],
+            [
+                'asistencia' => $asistencia,
+                'updated_at' => now(),
+                'created_at' => now()
+            ]
+        );
 
         return response()->json([
             "message"=>200,

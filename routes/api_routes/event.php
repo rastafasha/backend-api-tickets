@@ -21,6 +21,7 @@ Route::post('event/update/{event}', [EventoController::class, 'update'])->name('
 Route::post('event/updatestatus/admin/{event}', [EventoController::class, 'updateStatusAdmin'])->name('event.updateStatusAdmin');
 Route::post('event/addcolaborador/{event_id}', [EventoController::class, 'addcolaborador'])->name('event.addcolaborador');
 Route::post('event/removecolaborador/{event_id}', [EventoController::class, 'removeColaborador'])->name('event.removeColaborador');
+Route::put('event/asistencia/{event_id}/{client_id}', [EventoController::class, 'asistencia'])->name('event.asistencia');
 
 Route::put('event/update/status/{student:id}', [EventoController::class, 'updateStatus'])
     ->name('event.updateStatus');

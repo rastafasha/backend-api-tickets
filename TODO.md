@@ -1,4 +1,1 @@
-- [x] Fix Evento model's users() relationship to belongsToMany
-- [x] Rename eventsByUser method to usersByEvent in EventoController
-- [x] Change logic in usersByEvent to get users for event id using pivot table
-- [x] Update route in event.php from eventsbyuser to usersbyevent
+- [x] Modificar la función `clientsbyEvent` en `EventoController.php` para incluir el campo `asistencia` del pivote `eventos_clientes`.
