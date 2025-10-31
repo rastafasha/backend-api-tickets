@@ -168,18 +168,28 @@ class EventoController extends Controller
             'event' => $event,
         ], 200);
     }
-
-
-     public function eventsbyUser(Request $request, $user_id)
+    public function userbyEvent(Request $request, $event_id)
     {
-        $user = User::find($user_id);
-        $events = User::with('eventos')->findOrFail($user_id);
+        $event = Evento::with('users')->findOrFail($event_id);
 
         return response()->json([
             'code' => 200,
             'status' => 'success',
-            // 'user' => $user,
-            "events" => $events,
+            'event' => $event,
+        ], 200);
+    }
+
+
+     public function eventsbyUser(Request $request, $user_id)
+    {
+        // $user = User::find($user_id);
+        $user = User::with('eventos')->findOrFail($user_id);
+
+        return response()->json([
+            'code' => 200,
+            'status' => 'success',
+            'user' => $user,
+            // "events" => $events,
         ], 200);
     }
 
@@ -263,6 +273,52 @@ class EventoController extends Controller
         return response()->json([
             "message"=>200,
             "event"=>$event
+        ]);
+    }
+    public function addcolaborador(Request $request, $id)
+    {
+       
+        $event = Evento::findOrFail($id);
+        
+        $user_id = $request->user_id;
+        $event_id = $request->event_id;
+
+        
+        DB::table('eventos_users')->updateOrInsert(
+            [
+                'event_id' => $event_id,
+                'user_id' => $user_id
+            ],
+            [
+                'updated_at' => now(),
+                'created_at' => now()
+            ]
+        );  
+        
+        $event->update($request->all());
+
+        // Sync users if provided
+        if ($request->has('user_ids') && is_array($request->user_ids)) {
+            $event->clients()->sync($request->user_ids);
+        }
+
+        return response()->json([
+            "message"=>200,
+            "event"=>$event
+        ]);
+    }
+    public function removeColaborador(Request $request, $id)
+    {
+        $user_id = $request->user_id;
+        $event_id = $request->event_id;
+
+        DB::table('eventos_users')
+            ->where('event_id', $event_id)
+            ->where('user_id', $user_id)
+            ->delete();
+
+        return response()->json([
+            "message" => 200,
         ]);
     }
 

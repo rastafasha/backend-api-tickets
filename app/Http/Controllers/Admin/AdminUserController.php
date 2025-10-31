@@ -202,6 +202,19 @@ class AdminUserController extends Controller
         ], 200);
     }
 
+    public function porEmpresa($request)
+    {
+        $users = User::orderBy('created_at', 'DESC')
+        ->where('empresa', $request)
+        ->get();
+
+        return response()->json([
+            'code' => 200,
+            'status' => 'success',
+            'users' => $users
+        ], 200);
+    }
+
     public function search(Request $request){
         return User::search($request->buscar);
     }
