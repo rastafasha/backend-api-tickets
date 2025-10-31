@@ -107,6 +107,10 @@ Route::group(['middleware' => 'api'], function ($router) {
     });
 
 
+    Route::get('/migrate', function () {
+        Artisan::call('migrate');
+        return "Migrate";
+    });
     Route::get('/migrate-seed', function () {
         Artisan::call('migrate:refresh --seed');
         return "Migrate seed";
