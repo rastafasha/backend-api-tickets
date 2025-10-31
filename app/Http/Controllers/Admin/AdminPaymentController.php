@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use Carbon\Carbon;
+use App\Models\Evento;
 use App\Models\Payment;
 use App\Models\Tasabcv;
 use App\Helpers\Uploader;
@@ -76,9 +77,33 @@ $status,
      * @param int $event_id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function payDebtForStudent(Request $request, $client_id, $event_id)
+    public function payDebtForEvent(Request $request, $client_id, $event_id)
     {
+        // Fetch the event to get prices
+        $event = Evento::find($event_id);
+        if (!$event) {
+            return response()->json(['error' => 'Event not found'], 404);
+        }
 
+        // Determine selected price based on tipo
+        $tipo = $request->input('tipo', 'general');
+        switch ($tipo) {
+            case 'general':
+                $selected_price = $event->precio_general;
+                break;
+            case 'estudiantes':
+                $selected_price = $event->precio_estudiantes;
+                break;
+            case 'especialistas':
+                $selected_price = $event->precio_especialistas;
+                break;
+            default:
+                $selected_price = $event->precio_general;
+        }
+
+        if ($selected_price === null) {
+            return response()->json(['error' => 'Selected price not available for this event type'], 400);
+        }
 
         if($request->hasFile('imagen')){
             $path = Storage::putFile("payments", $request->file('imagen'));
@@ -91,7 +116,7 @@ $status,
         // Remove commas from monto string to allow numeric check
         $monto = str_replace(',', '', $monto);
 
-        if (!is_numeric($monto) || $monto <= 0) {
+        if (!is_numeric($monto) || $selected_price <= 0) {
             return response()->json(['error' => 'Invalid payment amount'], 400);
         }
 
@@ -109,37 +134,22 @@ $status,
             }
         }
 
-        // Calculate current debt for the student under the parent
-        $currentDebt = Payment::where('client_id', $client_id)
-            ->where('event_id', $event_id)
-            ->where(function ($query) {
-                $query->where('status_deuda', '!=', 'PAID')
-                      ->where('status', '!=', 'PAID')
-                      ->orWhere('status', 'PENDING');
-            })
-            ->sum('monto');
+        // Compare adjusted monto with selected price
+        if ($monto == $selected_price) {
+            $status_deuda = 'PAID';
+        } else {
+            $status_deuda = 'DEUDA';
+        }
 
         // Debug logs for troubleshooting
-        \Log::info("payDebtForStudent: originalMonto={$originalMonto}, adjustedMonto={$monto}, currentDebt={$currentDebt}, metodo={$metodo}");
-
-        // if ($monto > $currentDebt) {
-        //     // Allow small floating point tolerance
-        //     if (($monto - $currentDebt) > 0.01) {
-        //         return response()->json(['error' => 'Payment amount exceeds current debt'], 400);
-        //     }
-        // }
+        \Log::info("payDebtForEvent: originalMonto={$originalMonto}, adjustedMonto={$monto}, selectedPrice={$selected_price}, status_deuda={$status_deuda}, metodo={$metodo}");
 
         // Create new payment record
         $payment = new Payment();
         $payment->client_id = $client_id;
         $payment->event_id = $event_id;
         $payment->monto = $monto;
-
-        // if ($metodo === 'Transferencia Dólares' || $metodo === 'Transferencia Bolívares' || $metodo === 'Pago Móvil') {
-        //     $payment->status_deuda = (abs($monto - $currentDebt) < 0.01) ? 'PAID' : 'PENDING';
-        // } else {
-        //     $payment->status_deuda = (abs($monto - $currentDebt) < 0.01) ? 'PAID' : 'PENDING';
-        // }
+        $payment->status_deuda = $status_deuda;
 
         // $payment->status = 'PAID'; // Assuming payment status is PAID when payment is made
         $payment->metodo = $metodo;

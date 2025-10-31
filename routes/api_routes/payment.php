@@ -61,8 +61,8 @@ Route::get('payment/check-debt-status-p/{parent_id}', [AdminPaymentController::c
 Route::get('payment/debt-by-parent/{parent_id}', [AdminPaymentController::class, 'viewDebtByParent'])
     ->name('payment.viewDebtByParent');
 
-Route::post('payment/pay-debt/{client_id}/{event_id}', [AdminPaymentController::class, 'payDebtForStudent'])
-    ->name('payment.payDebtForStudent');
+Route::post('payment/pay-debt/{client_id}/{event_id}', [AdminPaymentController::class, 'payDebtForEvent'])
+    ->name('payment.payDebtForEvent');
 
 Route::post('payment/generate-monthly-debt', [AdminPaymentController::class, 'generateMonthlyDebtForParents'])
     ->name('payment.generateMonthlyDebtForParents');

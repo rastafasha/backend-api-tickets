@@ -363,5 +363,6 @@ class EventoController extends Controller
             "eventos" => $eventos,
         ], 200);
     }
+    
 
 }
