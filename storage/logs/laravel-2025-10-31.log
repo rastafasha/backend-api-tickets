@@ -1,2 +1,0 @@
-[2025-10-31 17:41:13] local.INFO: payDebtForEvent: originalMonto=80, adjustedMonto=80, selectedPrice=230, status_deuda=DEUDA, metodo=Transferencia Dólares  
-[2025-10-31 17:42:25] local.INFO: payDebtForEvent: originalMonto=24000, adjustedMonto=120, selectedPrice=230, status_deuda=DEUDA, metodo=Transferencia Bolívares  

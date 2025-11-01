@@ -124,15 +124,15 @@ $status,
 
         $originalMonto = $monto;
 
-        if ($metodo === 'Transferencia Bolívares' || $metodo === 'Pago Móvil') {
-            $tasabcv = Tasabcv::latest()->first();
-            if ($tasabcv && $tasabcv->precio_dia > 0) {
-                // Adjust monto by dividing by precio_dia to get comparable amount
-                $monto = $monto / $tasabcv->precio_dia;
-            } else {
-                return response()->json(['error' => 'Precio dia not found or invalid'], 400);
-            }
-        }
+        // if ($metodo === 'Transferencia Bolívares' || $metodo === 'Pago Móvil') {
+        //     $tasabcv = Tasabcv::latest()->first();
+        //     if ($tasabcv && $tasabcv->precio_dia > 0) {
+        //         // Adjust monto by dividing by precio_dia to get comparable amount
+        //         $monto = $monto / $tasabcv->precio_dia;
+        //     } else {
+        //         return response()->json(['error' => 'Precio dia not found or invalid'], 400);
+        //     }
+        // }
 
         // Compare adjusted monto with selected price
         if ($monto == $selected_price) {
