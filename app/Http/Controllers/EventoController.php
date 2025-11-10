@@ -390,6 +390,16 @@ class EventoController extends Controller
             "eventos" => $eventos,
         ], 200);
     }
+    public function destacados(){
+        $eventos = Evento::where('is_featured', 1)->orderBy('created_at', 'DESC')
+        ->get();
+
+        return response()->json([
+            'code' => 200,
+            'status' => 'success',
+            "eventos" => $eventos,
+        ], 200);
+    }
     
 
 }

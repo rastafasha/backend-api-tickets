@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('events', [EventoController::class, 'index'])->name('event.index');
 Route::get('events/activos/', [EventoController::class, 'activos'])->name('event.activos');
+Route::get('events/destacados/', [EventoController::class, 'destacados'])->name('event.destacados');
 Route::get('event/show/{id}', [EventoController::class, 'show'])->name('event.show');
 Route::get('event/clientsbyEvent/{id}', [EventoController::class, 'clientsbyEvent'])->name('event.clientsbyEvent');
 Route::get('event/userbyEvent/{id}', [EventoController::class, 'userbyEvent'])->name('event.userbyEvent');

@@ -19,6 +19,7 @@ class Evento extends Model
         'precio_especialistas',
         // 'client_id',
         // 'user_id',
+        'is_featured',
         'status',
         'company',
     ];
@@ -52,6 +53,8 @@ class Evento extends Model
             return self::all();
         }
         return self::where('name', 'like', "%$query%")
+        ->orWhere('status', 'like', "%$query%")
+        ->orWhere('is_featured', 'like', "%$query%")
         ->get();
     }
 
