@@ -186,12 +186,25 @@ class EventoController extends Controller
     {
         // $user = User::find($user_id);
         $user = User::with('eventos')->findOrFail($user_id);
-
+        $events = Evento::where("user_id", $user_id)->orderBy('created_at', 'DESC')
+        ->get();
         return response()->json([
             'code' => 200,
             'status' => 'success',
             'user' => $user,
             // "events" => $events,
+        ], 200);
+    }
+
+     public function eventsbyClient(Request $request, $client_id)
+    {
+        // $user = User::find($client_id);
+        $client = Cliente::with('eventos')->findOrFail($client_id);
+        $events = $client->eventos()->orderBy('created_at', 'DESC')->get();
+        return response()->json([
+            'code' => 200,
+            'status' => 'success',
+            'client' => $client,
         ], 200);
     }
 

@@ -10,7 +10,8 @@ Route::get('events/destacados/', [EventoController::class, 'destacados'])->name(
 Route::get('event/show/{id}', [EventoController::class, 'show'])->name('event.show');
 Route::get('event/clientsbyEvent/{id}', [EventoController::class, 'clientsbyEvent'])->name('event.clientsbyEvent');
 Route::get('event/userbyEvent/{id}', [EventoController::class, 'userbyEvent'])->name('event.userbyEvent');
-Route::get('event/eventsbyuser/{id}', [EventoController::class, 'eventsbyUser'])->name('event.eventsbyUser');
+Route::get('event/eventsbyuser/{user_id}', [EventoController::class, 'eventsbyUser'])->name('event.eventsbyUser');
+Route::get('event/eventsbyclient/{client_id}', [EventoController::class, 'eventsbyClient'])->name('event.eventsbyUser');
 Route::get('event/paymentbyid/{id}', [EventoController::class, 'paymentbyevent'])->name('event.paymentbyevent');
 
 Route::get('event/search/{request}', [EventoController::class, 'search'])
