@@ -12,7 +12,6 @@ Route::get('event/clientsbyEvent/{id}', [EventoController::class, 'clientsbyEven
 Route::get('event/userbyEvent/{id}', [EventoController::class, 'userbyEvent'])->name('event.userbyEvent');
 Route::get('event/eventsbyuser/{user_id}', [EventoController::class, 'eventsbyUser'])->name('event.eventsbyUser');
 Route::get('event/eventsbyclient/{client_id}', [EventoController::class, 'eventsbyClient'])->name('event.eventsbyUser');
-Route::get('event/paymentbyid/{id}', [EventoController::class, 'paymentbyevent'])->name('event.paymentbyevent');
 
 Route::get('event/search/{request}', [EventoController::class, 'search'])
     ->name('event.search');

@@ -8,7 +8,9 @@ use App\Models\Evento;
 use App\Models\Cliente;
 use App\Models\Payment;
 use Illuminate\Http\Request;
+use App\Mail\ConfirmationEvent;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
 class EventoController extends Controller
@@ -209,20 +211,7 @@ class EventoController extends Controller
     }
 
 
-    public function paymentbyevent(Request $request, $event_id)
-    {
-        $event = Evento::findOrFail($event_id);
-        $payments = Payment::where("event_id", $event_id)->orderBy('created_at', 'DESC')
-        ->get();
-
-        return response()->json([
-            'code' => 200,
-            'status' => 'success',
-            'event' => $event,
-            "payments" => $payments,
-            // "events" => eventCollection::make($events),
-        ], 200);
-    }
+    
 
 
     /**
@@ -412,6 +401,42 @@ class EventoController extends Controller
             'status' => 'success',
             "eventos" => $eventos,
         ], 200);
+    }
+
+
+    public function updateConfirmation(Request $request, $id)
+    {
+        $evento = Evento::findOrfail($id);
+        $client = Cliente::where("id", $request->client_id)->first();
+
+        $evento->confimation = $request->confimation;
+        $evento->update();
+        
+        if($request->confimation === '2'){
+            Mail::to($evento->patient->email)->send(new ConfirmationEvent($evento));
+        }
+        
+        return response()->json([
+            "message" => 200,
+            "evento" => $evento,
+            "amount" =>$request->amount,
+            "paymentmethod" =>$request->method_payment,
+            "amountadd" =>$request->amount_add,
+            "date_event" => Carbon::parse($evento->date_event)->format('d-m-Y'),
+            "event"=>$evento->event_id ? 
+                    [
+                        "id"=> $evento->event->id,
+                        "email" =>$evento->evento->email,
+                        "name" =>$evento->evento->name,
+                    ]: NULL,
+            "client_id" => $evento->client_id,
+            "client"=>$evento->client_id ? 
+                        [
+                            "id"=> $client->id,
+                            "email"=> $client->email,
+                            "full_name" =>$client->name.' '.$client->surname,
+                        ]: NULL,
+        ]);
     }
     
 

@@ -51,6 +51,8 @@ Route::put('payment/update/status/{payment:id}', [AdminPaymentController::class,
     ->name('payment.updateStatus');
 
 
+    Route::get('payment/paymentbyeventid/{event_id}', [AdminPaymentController::class, 'paymentbyevent'])->name('payment.paymentbyevent');
+
 
 // Route for checkDebtStatus
 Route::get('payment/check-debt-status/{parent_id}/{student_id}', [AdminPaymentController::class, 'checkDebtStatus'])

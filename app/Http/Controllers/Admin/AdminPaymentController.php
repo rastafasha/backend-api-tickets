@@ -601,6 +601,21 @@ $status,
         ]);
     }
 
+    public function paymentbyevent(Request $request, $event_id)
+    {
+        $event = Evento::findOrFail($event_id);
+        $payments = Payment::where("event_id", $event_id)->orderBy('created_at', 'DESC')
+        ->get();
+
+        return response()->json([
+            'code' => 200,
+            'status' => 'success',
+            'event' => $event,
+            "payments" => $payments,
+            // "events" => eventCollection::make($events),
+        ], 200);
+    }
+
     /**
      * Generate initial debt for a single student immediately upon registration.
      *

@@ -1,1 +1,1 @@
-- [x] Modificar la función `clientsbyEvent` en `EventoController.php` para incluir el campo `asistencia` del pivote `eventos_clientes`.
+- [x] Modify the search method in Evento.php to include searching by client's name via evento_clientes relationship

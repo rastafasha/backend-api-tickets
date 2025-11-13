@@ -55,6 +55,9 @@ class Evento extends Model
         return self::where('name', 'like', "%$query%")
         ->orWhere('status', 'like', "%$query%")
         ->orWhere('is_featured', 'like', "%$query%")
+        ->orWhereHas('clients', function($q) use ($query) {
+            $q->where('name', 'like', "%$query%");
+        })
         ->get();
     }
 
