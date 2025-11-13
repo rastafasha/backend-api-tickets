@@ -61,5 +61,10 @@ class Evento extends Model
         ->get();
     }
 
-    
+    public function getTicketCountForClient($client_id)
+    {
+        return Payment::where('event_id', $this->id)->where('client_id', $client_id)->count();
+    }
+
+
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Cliente;
 use Carbon\Carbon;
 use App\Models\Evento;
 use App\Models\Payment;
@@ -83,6 +84,12 @@ $status,
         $event = Evento::find($event_id);
         if (!$event) {
             return response()->json(['error' => 'Event not found'], 404);
+        }
+
+        // Check if client has already purchased 5 tickets for this event
+        $ticketCount = $event->getTicketCountForClient($client_id);
+        if ($ticketCount >= 5) {
+            return response()->json(['error' => 'Client has reached the maximum limit of 5 tickets per event'], 400);
         }
 
         // Determine selected price based on tipo
@@ -398,12 +405,12 @@ $status,
         // Only proceed if today is between 28-31 or 1-3 of the month
         if (($day >= 28 && $day <= 31) || ($day >= 1 && $day <= 3)) {
             // Find eventos with pending enrollment payments or relevant criteria
-            $eventos = \App\Models\Evento::whereHas('payments', function ($query) {
+            $eventos = Evento::whereHas('payments', function ($query) {
                 $query->where('status_deuda', '!=', 'PAID');
             })->get();
 
             foreach ($eventos as $evento) {
-                $client = $evento->parent;
+                $client = $evento->client;
                 if ($client && $client->email) {
                     Mail::to($client->email)->send(new EnrollmentNotificationMail($evento));
                 }
@@ -615,6 +622,24 @@ $status,
             // "events" => eventCollection::make($events),
         ], 200);
     }
+    public function paymentbyeventbyclient(Request $request, $event_id, $client_id, )
+    {
+        $event = Evento::findOrFail($event_id);
+        $client = Cliente::findOrFail($client_id);
+        $payments = Payment::where("event_id", $event_id)
+        ->where("client_id", $client_id)
+        ->orderBy('created_at', 'DESC')
+        ->get();
+
+        return response()->json([
+            'code' => 200,
+            'status' => 'success',
+            'event' => $event,
+            'client' => $client,
+            "payments" => $payments,
+            // "events" => eventCollection::make($events),
+        ], 200);
+    }
 
     /**
      * Generate initial debt for a single student immediately upon registration.
@@ -625,16 +650,16 @@ $status,
     public function generateInitialDebtForStudent($eventoId)
     {
         $now = Carbon::now();
-        $evento = Student::with('parent')->find($eventoId);
+        $evento = Evento::with(relations: 'clientes')->find($eventoId);
 
         if (!$evento || !$evento->parent) {
             return;
         }
 
-        $client = $evento->parent;
+        $client = $evento->client;
 
-        // Check if a debt payment for this month already exists for this parent and student
-        $existingDebt = Payment::where('parent_id', $client->id)
+        // Check if a debt payment for this month already exists for this client and student
+        $existingDebt = Payment::where('client_id', $client->id)
             ->where('event_id', $evento->id)
             ->whereDate('created_at', '>=', $now->startOfMonth())
             ->whereDate('created_at', '<=', $now->endOfMonth())
@@ -646,9 +671,9 @@ $status,
             return;
         }
 
-        // Create new debt payment for the parent's matricula amount
+        // Create new debt payment for the client's matricula amount
         $debtPayment = new Payment();
-        $debtPayment->parent_id = $client->id;
+        $debtPayment->client_id = $client->id;
         $debtPayment->event_id = $evento->id;
         $debtPayment->monto = $evento->matricula;
         $debtPayment->status_deuda = 'DEUDA';

@@ -13,7 +13,7 @@ Route::get('event/userbyEvent/{id}', [EventoController::class, 'userbyEvent'])->
 
 Route::get('event/eventsbyuser/{user_id}', [EventoController::class, 'eventsbyUser'])->name('event.eventsbyUser');
 
-Route::get('event/eventosbyclient/{client_id}', [EventoController::class, 'eventbyClient'])->name('event.eventsbyUser');
+Route::get('event/eventsbyclient/{client_id}', [EventoController::class, 'eventbyClient'])->name('event.eventsbyUser');
 
 Route::get('event/search/{request}', [EventoController::class, 'search'])
     ->name('event.search');
