@@ -502,7 +502,7 @@
                                                                                                                             <td class="text-16"
                                                                                                                                 style="font-size:16px; line-height:20px; color:#6e6e6e; font-family:'PT Sans', Arial, sans-serif; text-align:left; min-width:auto !important;">
                                                                                                                                 <multiline>
-                                                                                                                                    <!-- {{$appointment->method_payment}} -->
+                                                                                                                                    <!-- {{$evento->method_payment}} -->
                                                                                                                                     Pending
                                                                                                                                 </multiline>
                                                                                                                             </td>
@@ -535,7 +535,7 @@
 																																		<td class="img mw-15" width="20" style="font-size:0pt; line-height:0pt; text-align:left;"></td>
 																																		<td class="title-20 lh-30 mt-right" style="font-size:20px; color:#282828; font-family:'PT Sans', Arial, sans-serif; text-align:left; min-width:auto !important; line-height: 30px;">
 																																			<multiline>
-																																				${{$appointment->amount}}
+																																				${{$evento->amount}}
 																																			</multiline>
 																																		</td>
 																																	</tr>
@@ -630,8 +630,7 @@
                                                                                                                             style="display: block; padding: 15px 35px; text-decoration:none; color:#ffffff;">
                                                                                                                             <span
                                                                                                                                 class="link c-white"
-                                                                                                                                style="text-decoration:none; color:#ffffff;">Ver
-                                                                                                                                Cita</span>
+                                                                                                                                style="text-decoration:none; color:#ffffff;">ver evento</span>
                                                                                                                         </a>
                                                                                                                     </multiline>
                                                                                                                 </td>
@@ -692,9 +691,8 @@
                                                                 <td class="text-14 lh-24 a-center c-white l-white pb-20"
                                                                     style="font-size:14px; font-family:'PT Sans', Arial, sans-serif; min-width:auto !important; line-height: 24px; text-align:center; color:#ffffff; padding-bottom: 20px;">
                                                                     <multiline>
-                                                                        Clínica Santiago de Leon.<br>
-                                                                        Av Libertador, entre calle Negrín y Las
-                                                                        Delicias, Edif. Clínica Santiago de León
+                                                                        Payticket App.<br>
+                                                                        Todos los derechos reservados.
                                                                         <br />
                                                                         <a cm_dontconvertlink href="tel:+212-308-1900"
                                                                             target="_blank" class="link c-white"

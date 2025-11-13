@@ -147,6 +147,18 @@ class RepresentanteController extends Controller
         }
     }
 
+    public function destroy(cliente $id)
+    {
+        $cliente = Cliente::findOrFail($id);
+        if($cliente->image){
+            Storage::delete($cliente->image);
+        }
+        $cliente->delete();
+        return response()->json([
+            "message"=>200
+        ]);
+    }
+
     protected function userInput(): array
     {
         return [

@@ -198,7 +198,7 @@ class EventoController extends Controller
         ], 200);
     }
 
-     public function eventsbyClient(Request $request, $client_id)
+     public function eventbyClient(Request $request, $client_id)
     {
         // $user = User::find($client_id);
         $client = Cliente::with('eventos')->findOrFail($client_id);
@@ -279,31 +279,7 @@ class EventoController extends Controller
             "event"=>$event
         ]);
     }
-    public function asistencia(Request $request, $event_id, $client_id)
-    {
-
-        $event = Evento::findOrFail($event_id);
-
-        $asistencia = $request->asistencia;
-
-
-        DB::table('eventos_clientes')->updateOrInsert(
-            [
-                'event_id' => $event_id,
-                'client_id' => $client_id,
-            ],
-            [
-                'asistencia' => $asistencia,
-                'updated_at' => now(),
-                'created_at' => now()
-            ]
-        );
-
-        return response()->json([
-            "message"=>200,
-            "event"=>$event
-        ]);
-    }
+    
     public function addcolaborador(Request $request, $id)
     {
        
@@ -403,31 +379,55 @@ class EventoController extends Controller
         ], 200);
     }
 
-
-    public function updateConfirmation(Request $request, $id)
+    public function asistencia(Request $request, $event_id, $client_id)
     {
-        $evento = Evento::findOrfail($id);
-        $client = Cliente::where("id", $request->client_id)->first();
 
-        $evento->confimation = $request->confimation;
-        $evento->update();
+        $event = Evento::findOrFail($event_id);
+
+        $asistencia = $request->asistencia;
+
         
-        if($request->confimation === '2'){
-            Mail::to($evento->patient->email)->send(new ConfirmationEvent($evento));
-        }
+
+        DB::table('eventos_clientes')->updateOrInsert(
+            [
+                'event_id' => $event_id,
+                'client_id' => $client_id,
+            ],
+            [
+                'asistencia' => $asistencia,
+                'updated_at' => now(),
+                'created_at' => now()
+            ]
+        );
+
+        return response()->json([
+            "message"=>200,
+            "event"=>$event
+        ]);
+    }
+
+
+    public function sendConfirmation(Request $request, $event_id, $client_id)
+    {
+        $evento = Evento::findOrfail($event_id);
+        $client = Cliente::where("id", '=',$client_id)->first();
+
+        
+        Mail::to($evento->client->email)->send(new ConfirmationEvent($evento));
         
         return response()->json([
             "message" => 200,
-            "evento" => $evento,
-            "amount" =>$request->amount,
-            "paymentmethod" =>$request->method_payment,
-            "amountadd" =>$request->amount_add,
-            "date_event" => Carbon::parse($evento->date_event)->format('d-m-Y'),
-            "event"=>$evento->event_id ? 
-                    [
+            // "evento" => $evento,
+            "evento"=>$evento->event_id ? 
+            [
+                        "fecha_inicio" => Carbon::parse($evento->fecha_inicio)->format('d-m-Y'),
+                        "fecha_fin" => Carbon::parse($evento->fecha_fin)->format('d-m-Y'),
                         "id"=> $evento->event->id,
-                        "email" =>$evento->evento->email,
                         "name" =>$evento->evento->name,
+                        "description" =>$evento->evento->description,
+                        "precio_general" =>$evento->evento->precio_general,
+                        "precio_estudiantes" =>$evento->evento->precio_estudiantes,
+                        "precio_especialistas" =>$evento->evento->precio_especialistas,
                     ]: NULL,
             "client_id" => $evento->client_id,
             "client"=>$evento->client_id ? 

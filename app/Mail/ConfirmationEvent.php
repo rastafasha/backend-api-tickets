@@ -6,6 +6,7 @@ use App\Models\Evento;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
 class ConfirmationEvent extends Mailable
@@ -33,9 +34,27 @@ class ConfirmationEvent extends Mailable
      *
      * @return $this
      */
+    // public function build()
+    // {
+    //     return $this->from('mercadocreativo@gmail.com', 'Certificación de asistencia al evento')->subject('Certificación de Asistencia')
+    //         ->markdown('emails.admin.new_evento_certificado' , ['evento' => $this->evento]);
+    // }
+
+    public function envelope(): Envelope
+    {
+        return new Envelope(
+            subject: 'Certificado de Asistencia',
+        );
+    }
+
+    /**
+     * Build the message.
+     *
+     * @return $this
+     */
     public function build()
     {
-        return $this->from('mercadocreativo@gmail.com', 'Certificación de asistencia al evento')->subject('Certificación de Asistencia')
-            ->markdown('emails.admin.new_evento' , ['evento' => $this->evento]);
+        $evento = $this->evento;
+        return $this->view('emails.admin.new_evento_certificado');
     }
 }
