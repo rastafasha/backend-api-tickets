@@ -367,7 +367,7 @@ class EventoController extends Controller
     }
 
     public function activos(){
-        $eventos = Evento::where('status', 'ACTIVE')->orderBy('created_at', 'DESC')
+        $eventos = Evento::where('status', 'PUBLISHED')->orderBy('created_at', 'DESC')
         ->get();
 
         return response()->json([

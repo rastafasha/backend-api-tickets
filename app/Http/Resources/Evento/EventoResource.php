@@ -22,6 +22,8 @@ class EventoResource extends JsonResource
             "precio_general"=>$this->resource->precio_general,
             "precio_estudiante"=>$this->resource->precio_estudiante,
             "precio_especialista"=>$this->resource->precio_especialista,
+            "company"=>$this->resource->company,
+            "companies"=>$this->resource->companies,
             "avatar"=> $this->resource->avatar ? env("APP_URL")."storage/".$this->resource->avatar : null,
             // "avatar"=> $this->resource->avatar ? env("APP_URL").$this->resource->avatar : null,
             

@@ -31,11 +31,11 @@ class UserResource extends JsonResource
             "birth_date"=>$this->resource->birth_date,
             "gender"=>$this->resource->gender,
             "status"=>$this->resource->status,
-            "empresa"=>$this->resource->empresa,
             "avatar"=> $this->resource->avatar ? env("APP_URL")."storage/".$this->resource->avatar : null,
             // "avatar"=> $this->resource->avatar ? env("APP_URL").$this->resource->avatar : null,
             
             "eventos"=>$this->resource->eventos,
+            "company"=>$this->resource->company,
             "roles"=>$this->resource->roles->first(),
             "created_at"=>$this->resource->created_at ? Carbon::parse($this->resource->created_at)->format("Y/m/d") : NULL,
             

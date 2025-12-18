@@ -132,7 +132,9 @@ class User extends Authenticatable implements JWTSubject
         }
         return self::where('name', 'like', "%$query%")
         ->orWhere('email', 'like', "%$query%")
-        ->orWhere('empresa', 'like', "%$query%")
+         ->orWhereHas('company', function($q) use ($query) {
+            $q->where('name', 'like', "%$query%");
+        })
         ->get();
     }
 
@@ -144,6 +146,10 @@ class User extends Authenticatable implements JWTSubject
     public function eventos()
     {
         return $this->belongsToMany(Evento::class, 'eventos_users', 'user_id', 'event_id');
+    }
+    public function company()
+    {
+        return $this->belongsToMany(Company::class, 'company_users', 'user_id', 'company_id');
     }
     
 

@@ -15,7 +15,6 @@ class EventFactory extends Factory
         return [
             'name' => $this->faker->name,
             'description' => $this->faker->description,
-            'company' => $this->faker->company,
             'fecha_inicio' => $this->faker->dateTimeBetween('-30 months', '6 months'),
             'fecha_fin' => $this->faker->dateTimeBetween('-30 months', '6 months'),
             // 'client_id' => User::factory(),

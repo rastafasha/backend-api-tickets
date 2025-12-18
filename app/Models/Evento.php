@@ -21,7 +21,6 @@ class Evento extends Model
         // 'user_id',
         'is_featured',
         'status',
-        'company',
     ];
 
 
@@ -42,6 +41,15 @@ class Evento extends Model
         return $this->belongsTo(Cliente::class, 'client_id');
     }
 
+    public function companies()
+    {
+        return $this->belongsToMany(Company::class, 'eventos_company', 'event_id', 'company_id');
+    }
+    public function company()
+    {
+        return $this->belongsTo(Company::class, 'company_id');
+    }
+
 
     public function payments()
     {
@@ -56,6 +64,9 @@ class Evento extends Model
         ->orWhere('status', 'like', "%$query%")
         ->orWhere('is_featured', 'like', "%$query%")
         ->orWhereHas('clients', function($q) use ($query) {
+            $q->where('name', 'like', "%$query%");
+        })
+        ->orWhereHas('company', function($q) use ($query) {
             $q->where('name', 'like', "%$query%");
         })
         ->get();

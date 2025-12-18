@@ -25,7 +25,7 @@ class CreateEventosTable extends Migration
             $table->double('precio_especialistas', 15, 2)->nullable();
             $table->string('avatar')->nullable();
             $table->enum('status', [
-                'ACTIVE', 'INACTIVE','RETIRED','FINISHED'
+                'PUBLISHED', 'INACTIVE','RETIRED','FINISHED'
                 ])->default('INACTIVE');
 
             // $table->unsignedBigInteger('user_id')->nullable();
