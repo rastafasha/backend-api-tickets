@@ -17,7 +17,7 @@ class CreateEventosTable extends Migration
             $table->id();
             $table->string('name');
             $table->text('description')->nullable();
-            $table->text('company')->nullable();
+            $table->unsignedBigInteger('company_id')->nullable();
             $table->timestamp('fecha_inicio');
             $table->timestamp('fecha_fin')->nullable();
             $table->double('precio_general', 15, 2);
@@ -28,12 +28,9 @@ class CreateEventosTable extends Migration
                 'PUBLISHED', 'INACTIVE','RETIRED','FINISHED'
                 ])->default('INACTIVE');
 
-            // $table->unsignedBigInteger('user_id')->nullable();
-
             $table->timestamps();
             $table->softDeletes();
 
-            // $table->foreign('user_id')->references('id')->on('users')->nullOnDelete();
         });
     }
 

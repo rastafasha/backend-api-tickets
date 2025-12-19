@@ -18,7 +18,7 @@ class Evento extends Model
         'precio_estudiantes',
         'precio_especialistas',
         // 'client_id',
-        // 'user_id',
+        'company_id',
         'is_featured',
         'status',
     ];
@@ -41,10 +41,7 @@ class Evento extends Model
         return $this->belongsTo(Cliente::class, 'client_id');
     }
 
-    public function companies()
-    {
-        return $this->belongsToMany(Company::class, 'eventos_company', 'event_id', 'company_id');
-    }
+    
     public function company()
     {
         return $this->belongsTo(Company::class, 'company_id');

@@ -38,11 +38,10 @@ class CompanySeeder extends Seeder
                     'fecha_inicio' => $faker->date(),
                     'fecha_fin' => $faker->date(),
                     'avatar' => null,
-                    // 'user_id' => 4,
+                    'company_id' => rand(1, 5),
                     'status' => $faker->randomElement(['PUBLISHED', 'INACTIVE',
                     'RETIRED','FINISHED']),
                 ]);
-                $event->companies()->attach($company);
             }
         }
     }

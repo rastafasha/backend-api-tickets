@@ -224,13 +224,16 @@ class CompanyController extends Controller
 
     public function eventsbyCompany(Request $request, $company_id)
     {
-        $company = Company::with(['eventos'])->findOrFail($company_id);
-      
+        $company = Company::findOrFail($company_id);
+        $events = Evento::whereHas('company', function ($query) use ($company_id) {
+            $query->where('company_id', $company_id);
+        })->get();
 
         return response()->json([
             'code' => 200,
             'status' => 'success',
             'company' => $company,
+            'events' => $events,
         ], 200);
     }
 

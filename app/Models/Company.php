@@ -24,10 +24,7 @@ class Company extends Model
         return $this->belongsToMany(User::class, 'company_users', 'company_id', 'user_id');
     }
 
-    public function eventos()
-    {
-        return $this->belongsToMany(Evento::class, 'eventos_company', 'company_id', 'event_id');
-    }
+   
     public function evento()
     {
         return $this->belongsTo(Evento::class, 'event_id');
