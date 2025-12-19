@@ -12,6 +12,7 @@ use App\Mail\ConfirmationEvent;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Resources\Evento\EventoResource;
 
 class EventoController extends Controller
 {
@@ -153,8 +154,8 @@ class EventoController extends Controller
         // ->findOrFail($id);
 
         return response()->json([
-            // "event" => EventoResource::make($event),
-            "event" => $event,
+            "event" => EventoResource::make($event),
+            // "event" => $event,
         ]);
 
        

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Evento;
 use App\Models\Company;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -165,5 +166,131 @@ class CompanyController extends Controller
         return response()->json([
             "message"=>200
         ]);
+    }
+
+    public function search(Request $request){
+        return Company::search($request->buscar);
+    }
+
+
+
+     public function addEvent(Request $request, $id)
+    {
+       
+        $company = Company::findOrFail($id);
+        
+        $event_id = $request->event_id;
+        $company_id = $request->company_id;
+
+        
+        DB::table('eventos_company')->updateOrInsert(
+            [
+                'company_id' => $company_id,
+                'event_id' => $event_id
+            ],
+            [
+                'updated_at' => now(),
+                'created_at' => now()
+            ]
+        );  
+        
+        $company->update($request->all());
+
+        // Sync events if provided
+        if ($request->has('event_ids') && is_array($request->event_ids)) {
+            $company->events()->sync($request->event_ids);
+        }
+
+        return response()->json([
+            "message"=>200,
+            "company"=>$company
+        ]);
+    }
+    public function removeEvent(Request $request, $id)
+    {
+        $event_id = $request->event_id;
+        $company_id = $request->company_id;
+
+        DB::table('eventos_company')
+            ->where('company_id', $company_id)
+            ->where('event_id', $event_id)
+            ->delete();
+
+        return response()->json([
+            "message" => 200,
+        ]);
+    }
+
+
+    public function eventsbyCompany(Request $request, $company_id)
+    {
+        $company = Company::with(['eventos'])->findOrFail($company_id);
+      
+
+        return response()->json([
+            'code' => 200,
+            'status' => 'success',
+            'company' => $company,
+        ], 200);
+    }
+
+
+     public function addEmployee(Request $request, $id)
+    {
+       
+        $company = Company::findOrFail($id);
+        
+        $user_id = $request->user_id;
+        $company_id = $request->company_id;
+
+        
+        DB::table('company_users')->updateOrInsert(
+            [
+                'company_id' => $company_id,
+                'user_id' => $user_id
+            ],
+            [
+                'updated_at' => now(),
+                'created_at' => now()
+            ]
+        );  
+        
+        $company->update($request->all());
+
+        // Sync users if provided
+        if ($request->has('user_ids') && is_array($request->user_ids)) {
+            $company->clients()->sync($request->user_ids);
+        }
+
+        return response()->json([
+            "message"=>200,
+            "company"=>$company
+        ]);
+    }
+    public function removeEmployee(Request $request, $id)
+    {
+        $user_id = $request->user_id;
+        $company_id = $request->company_id;
+
+        DB::table('company_users')
+            ->where('company_id', $company_id)
+            ->where('user_id', $user_id)
+            ->delete();
+
+        return response()->json([
+            "message" => 200,
+        ]);
+    }
+
+    public function usersbyCompany(Request $request, $company_id)
+    {
+        $company = Company::with(['users'])->findOrFail($company_id);
+      
+
+        return response()->json([
+            'code' => 200,
+            'status' => 'success',
+            'company' => $company,
+        ], 200);
     }
 }

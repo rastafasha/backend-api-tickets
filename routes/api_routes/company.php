@@ -7,10 +7,20 @@ use Illuminate\Support\Facades\Route;
 Route::get('companies', [CompanyController::class, 'index'])->name('company.index');
 Route::get('company/show/{id}', [CompanyController::class, 'show'])->name('company.show');
 
+Route::get('company/eventsby/{company_id}', [CompanyController::class, 'eventsbyCompany'])->name('company.eventsbyCompany');
+Route::get('company/usersby/{company_id}', [CompanyController::class, 'usersbyCompany'])->name('company.usersbyCompany');
+
 Route::get('company/search/{request}', [CompanyController::class, 'search'])
     ->name('company.search');
     
 Route::post('company/store', [CompanyController::class, 'companystore'])->name('company.companystore');
+
+Route::post('company/addcolaborador/{company_id}', [CompanyController::class, 'addEmployee'])->name('event.addEmployee');
+Route::post('company/removecolaborador/{company_id}', [CompanyController::class, 'removeEmployee'])->name('event.removeEmployee');
+
+Route::post('company/addEvent/{company_id}', [CompanyController::class, 'addEvent'])->name('event.addEvent');
+Route::post('company/removeEvent/{company_id}', [CompanyController::class, 'removeEvent'])->name('event.removeEvent');
+
 
 Route::post('company/update/{company}', [CompanyController::class, 'update'])->name('company.update');
 

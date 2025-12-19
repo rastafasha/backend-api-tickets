@@ -21,11 +21,12 @@ class Company extends Model
     }
     public function users()
     {
-        return $this->belongsToMany(User::class, 'company_users', 'event_id', 'user_id');
+        return $this->belongsToMany(User::class, 'company_users', 'company_id', 'user_id');
     }
+
     public function eventos()
     {
-        return $this->belongsToMany(Evento::class, 'company_eventos', 'event_id', 'company_id');
+        return $this->belongsToMany(Evento::class, 'eventos_company', 'company_id', 'event_id');
     }
     public function evento()
     {
