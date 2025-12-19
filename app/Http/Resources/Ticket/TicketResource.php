@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Resources\Evento;
+namespace App\Http\Resources\Ticket;
 
 use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class EventoResource extends JsonResource
+class TicketResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,34 +16,40 @@ class EventoResource extends JsonResource
     public function toArray($request)
     {
         return [
+
+
             "id"=>$this->resource->id,
             "name"=>$this->resource->name,
             "description"=>$this->resource->description,
             "precio_general"=>$this->resource->precio_general,
             "precio_estudiantes"=>$this->resource->precio_estudiantes,
             "precio_especialistas"=>$this->resource->precio_especialistas,
+            "referencia"=>$this->resource->referencia,
+            "monto"=>$this->resource->monto,
             "status"=>$this->resource->status,
+            "qr_code"=>$this->resource->qr_code,
+            "client_id"=>$this->resource->client_id,
+            "client"=>$this->resource->client ? [
+                "id"=>$this->resource->client->id,
+                "name"=>$this->resource->client->name,
+            ]:NULL,
             "company_id"=>$this->resource->company_id,
             "company"=>$this->resource->company ? [
                 "id"=>$this->resource->company->id,
                 "name"=>$this->resource->company->name,
             ]:NULL,
-            "avatar"=> $this->resource->avatar ? env("APP_URL")."storage/".$this->resource->avatar : null,
-            // "avatar"=> $this->resource->avatar ? env("APP_URL").$this->resource->avatar : null,
+            "event_id"=>$this->resource->event_id,
+            "event"=>$this->resource->event ? [
+                "id"=>$this->resource->event->id,
+                "name"=>$this->resource->event->name,
+                "event_name"=>$this->resource->event->name,
+            ]:NULL,
             
             "fecha_inicio"=>$this->resource->fecha_inicio ? Carbon::parse($this->resource->fecha_inicio)->format("Y/m/d") : NULL,
             "fecha_fin"=>$this->resource->fecha_fin ? Carbon::parse($this->resource->fecha_fin)->format("Y/m/d") : NULL,
             
             "created_at"=>$this->resource->created_at ? Carbon::parse($this->resource->created_at)->format("Y-m-d h:i A") : NULL,
             
-            "clientes"=>$this->resource->cliente ? [
-                "id"=>$this->resource->cliente->id,
-                "roles"=>$this->resource->roles->first(),
-            ]:NULL,
-            "payments"=>$this->resource->payment ? [
-                "id"=>$this->resource->payment->id,
-            ]:NULL,
-
             // "clientes"=>$this->resource->clientes,
 
         ];

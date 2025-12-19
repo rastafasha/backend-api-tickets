@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\Company\CompanyResource;
 use App\Models\Evento;
 use App\Models\Company;
 use Illuminate\Http\Request;
@@ -17,8 +18,7 @@ class CompanyController extends Controller
      */
     public function index(Request $request)
     {
-        $search = $request->search;
-
+      
         $companies = Company::orderBy("id", "desc")
         ->get();
                     
@@ -61,20 +61,7 @@ class CompanyController extends Controller
         
         $company = Company::create($request->all());
 
-        $user_id = $request->user_id;
-
-        if ($user_id) {
-            DB::table('companies_users')->updateOrInsert(
-                [
-                    'company_id' => $company->id,
-                    'user_id' => $user_id
-                ],
-                [
-                    'updated_at' => now(),
-                    'created_at' => now()
-                ]
-            );
-        }
+       
 
         $request->request->add([
             "company_id" =>$company->id
@@ -97,7 +84,8 @@ class CompanyController extends Controller
         $company = Company::find($id);
 
         return response()->json([
-            "company" => $company,
+            "company" => CompanyResource::make($company),
+            
         ]);
     }
 
@@ -108,11 +96,36 @@ class CompanyController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-   public function updateCompany(Request $request, $id)
+   public function update(Request $request, $id)
     {
 
         $company = Company::findOrFail($id);
-        if($request->hasFile('avatar')){
+
+       if($request->hasFile('imagen')){
+            if($company->avatar){
+                Storage::delete($company->avatar);
+            }
+            $path = Storage::putFile("companies", $request->file('imagen'));
+            $request->request->add(["avatar"=>$path]);
+        }
+
+        
+        $company->update($request->all());
+
+       
+
+        return response()->json([
+            "message"=>200,
+            "company"=>$company
+        ]);
+    }
+
+
+    public function companyUpdate(Request $request, $id)
+    {
+
+        $company = Company::findOrFail($id);
+        if($request->hasFile('imagen')){
             if($company->avatar){
                 Storage::delete($company->avatar);
             }

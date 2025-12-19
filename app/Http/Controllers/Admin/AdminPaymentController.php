@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
+
 use App\Models\Cliente;
 use Carbon\Carbon;
 use App\Models\Evento;
 use App\Models\Payment;
+use App\Models\Ticket;
 use App\Models\Tasabcv;
 use App\Helpers\Uploader;
 use Illuminate\Http\Request;
@@ -334,6 +336,7 @@ $status,
 
 
 
+
     public function updateStatus(Request $request, $id)
     {
         $payment = Payment::findOrfail($id);
@@ -344,10 +347,17 @@ $status,
         }
         if ($request->status === 'APPROVED') {
             $payment->status_deuda = 'PAID';
+             // si el pago es positivo, generamos un ticket con los datos de la compra,
+             // llaando a la funcion storeTicket en ticketController
+
+             $this->storeTicket($request, $payment);
+
         }
 
         $payment->update();
         return $payment;
+    
+
     }
 
 
@@ -367,9 +377,7 @@ $status,
         ], 200);
     }
 
-   
-
-    public function pagosPendientesbyStudent(Request $request, $event_id)
+       public function pagosPendientesbyStudent(Request $request, $event_id)
     {
         $payments = Payment::where("event_id", $event_id)
         ->orderBy('created_at', 'DESC')
@@ -639,6 +647,74 @@ $status,
             "payments" => $payments,
             // "events" => eventCollection::make($events),
         ], 200);
+    }
+
+
+    /**
+     * Store a new ticket based on approved payment.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Models\Payment $payment
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function storeTicket(Request $request, Payment $payment)
+    {
+        try {
+            // Get the related event and client
+            $event = Evento::find($payment->event_id);
+            $client = Cliente::find($payment->client_id);
+            
+            if (!$event || !$client) {
+                return response()->json([
+                    'error' => 'Event or Client not found'
+                ], 404);
+            }
+
+            // Check if ticket already exists for this payment
+            $existingTicket = Ticket::where('referencia', $payment->referencia)->first();
+            if ($existingTicket) {
+                return response()->json([
+                    'message' => 'Ticket already exists for this payment',
+                    'ticket' => $existingTicket
+                ]);
+            }
+
+            // Generate QR code (you can customize this logic)
+            $qrCodeData = json_encode([
+                'ticket_id' => uniqid(),
+                'payment_id' => $payment->id,
+                'client_id' => $payment->client_id,
+                'event_id' => $payment->event_id,
+                'referencia' => $payment->referencia,
+                'monto' => $payment->monto,
+                'created_at' => now()->toISOString()
+            ]);
+            
+            // Create the ticket
+            $ticket = Ticket::create([
+                'client_id' => $payment->client_id,
+                'company_id' => $event->company_id ?? null, // Set if available in event
+                'event_id' => $payment->event_id,
+                'event_name' => $event->name ?? 'Event', // Get event name
+                'referencia' => $payment->referencia,
+                'monto' => $payment->monto,
+                'fecha_inicio' => $event->fecha_inicio ?? null, // Get from event
+                'fecha_fin' => $event->fecha_fin ?? null, // Get from event
+                'qr_code' => base64_encode($qrCodeData) // Store QR code as base64
+            ]);
+
+            return response()->json([
+                'message' => 'Ticket created successfully',
+                'ticket' => $ticket
+            ]);
+
+        } catch (\Exception $e) {
+            \Log::error('Error creating ticket: ' . $e->getMessage());
+            return response()->json([
+                'error' => 'Failed to create ticket',
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
 
     /**

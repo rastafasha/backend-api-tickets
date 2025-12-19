@@ -31,8 +31,9 @@ class UserResource extends JsonResource
             "birth_date"=>$this->resource->birth_date,
             "gender"=>$this->resource->gender,
             "status"=>$this->resource->status,
-            "avatar"=> $this->resource->avatar ? env("APP_URL")."storage/".$this->resource->avatar : null,
-            // "avatar"=> $this->resource->avatar ? env("APP_URL").$this->resource->avatar : null,
+            
+            // "avatar"=> $this->resource->avatar ? env("APP_URL")."storage/".$this->resource->avatar : null,
+            "avatar"=> $this->resource->avatar ? env("APP_URL").$this->resource->avatar : null,
             
             "eventos"=>$this->resource->eventos,
             "company"=>$this->resource->company,

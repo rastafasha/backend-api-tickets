@@ -19,6 +19,7 @@ class CreateCompanyTable extends Migration
             $table->string('name');
             $table->text('description')->nullable();
 
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->string('avatar')->nullable();
             $table->timestamps();
         });

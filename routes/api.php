@@ -88,6 +88,9 @@ Route::group(['middleware' => 'api'], function ($router) {
     // company
     require __DIR__ . '/api_routes/company.php';
     
+    // ticket
+    require __DIR__ . '/api_routes/ticket.php';
+    
 
 
 

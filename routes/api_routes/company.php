@@ -15,13 +15,14 @@ Route::get('company/search/{request}', [CompanyController::class, 'search'])
     
 Route::post('company/store', [CompanyController::class, 'companystore'])->name('company.companystore');
 
-Route::post('company/addcolaborador/{company_id}', [CompanyController::class, 'addEmployee'])->name('event.addEmployee');
-Route::post('company/removecolaborador/{company_id}', [CompanyController::class, 'removeEmployee'])->name('event.removeEmployee');
+Route::post('company/addcolaborador/{company_id}', [CompanyController::class, 'addEmployee'])->name('company.addEmployee');
+Route::post('company/removecolaborador/{company_id}', [CompanyController::class, 'removeEmployee'])->name('company.removeEmployee');
 
-Route::post('company/addEvent/{company_id}', [CompanyController::class, 'addEvent'])->name('event.addEvent');
-Route::post('company/removeEvent/{company_id}', [CompanyController::class, 'removeEvent'])->name('event.removeEvent');
+Route::post('company/addEvent/{company_id}', [CompanyController::class, 'addEvent'])->name('company.addEvent');
+Route::post('company/removeEvent/{company_id}', [CompanyController::class, 'removeEvent'])->name('company.removeEvent');
 
 
 Route::post('company/update/{company}', [CompanyController::class, 'update'])->name('company.update');
+// Route::post('company/updatecom/{company}', [CompanyController::class, 'companyUpdate'])->name('company.companyUpdate');
 
 Route::delete('company/destroy/{id}', [CompanyController::class, 'destroy'])->name('company.destroy');
