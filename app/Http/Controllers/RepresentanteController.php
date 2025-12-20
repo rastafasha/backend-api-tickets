@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\Representante\RepresntanteCollection;
 use App\Models\Cliente;
 use Illuminate\Http\Request;
+use App\Mail\NewInvitationMail;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Resources\Representante\RepresntanteResource;
+use App\Http\Resources\Representante\RepresntanteCollection;
 
 class RepresentanteController extends Controller
 {
@@ -214,4 +216,21 @@ class RepresentanteController extends Controller
         $cliente->update();
         return $cliente;
     }
+
+    public function invitarCliente(Request $request)
+    {
+        // Lógica para invitar al cliente utilizando los datos del request
+        // Por ejemplo, enviar un correo electrónico de invitación
+       
+        $cliente = new Cliente();
+        $email = $request->email;
+        //envio de correo de invitación
+        Mail::to($email)->send(new NewInvitationMail($cliente));
+
+        $cliente->update($request->all());
+        return response()->json([
+            "message" => 200,
+            "info" => "Invitación enviada correctamente"
+        ]);
+    }   
 }

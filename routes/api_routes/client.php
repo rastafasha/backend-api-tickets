@@ -15,6 +15,7 @@ Route::post('client/store', [RepresentanteController::class, 'store'])->name('cl
 Route::post('client/update/{parent}', [RepresentanteController::class, 'update'])->name('client.update');
 Route::post('client/updatestatusclient/{parent}', [RepresentanteController::class, 'updateStatusClient'])->name('client.updateStatusClient');
 Route::post('client/updatestatusadmin/{parent}', [RepresentanteController::class, 'updateStatusAdmin'])->name('client.updateStatusAdmin');
+Route::post('client/invitarCliente', [RepresentanteController::class, 'invitarCliente'])->name('client.invitarCliente');
 
 Route::put('client/update/status/{parent:id}', [RepresentanteController::class, 'updateStatus'])
     ->name('client.updateStatus');
