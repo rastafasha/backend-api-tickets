@@ -7,8 +7,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('tickets', [TicketController::class, 'index'])->name('ticket.index');
 Route::get('ticket/show/{id}', [TicketController::class, 'show'])->name('ticket.show');
 
-Route::get('tickets/client/{client_id}', [TicketController::class, 'showbyClient'])->name('ticket.showbyClient');
+Route::get('tickets/client/{from_id}', [TicketController::class, 'showbyClient'])->name('ticket.showbyClient');
 Route::get('tickets/event/{event_id}', [TicketController::class, 'showbyEvent'])->name('ticket.showbyEvent');
+Route::get('tickets/shared/{client_id}', [TicketController::class, 'shared'])->name('ticket.shared');
 
 Route::get('ticket/search/{request}', [TicketController::class, 'search'])
     ->name('ticket.search');

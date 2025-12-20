@@ -16,23 +16,22 @@ class TicketResource extends JsonResource
     public function toArray($request)
     {
         return [
-
-
             "id"=>$this->resource->id,
-            "name"=>$this->resource->name,
-            "description"=>$this->resource->description,
-            "precio_general"=>$this->resource->precio_general,
-            "precio_estudiantes"=>$this->resource->precio_estudiantes,
-            "precio_especialistas"=>$this->resource->precio_especialistas,
+            "event_name"=>$this->resource->event_name,
             "referencia"=>$this->resource->referencia,
             "monto"=>$this->resource->monto,
             "status"=>$this->resource->status,
             "qr_code"=>$this->resource->qr_code,
+            "from_id"=>$this->resource->from_id,
+            // "from"=>$this->resource->from ? [
+            //     "id"=>$this->resource->from->id,
+            //     "name"=>$this->resource->from->name,
+            // ]:NULL,
             "client_id"=>$this->resource->client_id,
-            "client"=>$this->resource->client ? [
-                "id"=>$this->resource->client->id,
-                "name"=>$this->resource->client->name,
-            ]:NULL,
+            // "client"=>$this->resource->client ? [
+            //     "id"=>$this->resource->client->id,
+            //     "name"=>$this->resource->client->name,
+            // ]:NULL,
             "company_id"=>$this->resource->company_id,
             "company"=>$this->resource->company ? [
                 "id"=>$this->resource->company->id,
@@ -49,9 +48,7 @@ class TicketResource extends JsonResource
             "fecha_fin"=>$this->resource->fecha_fin ? Carbon::parse($this->resource->fecha_fin)->format("Y/m/d") : NULL,
             
             "created_at"=>$this->resource->created_at ? Carbon::parse($this->resource->created_at)->format("Y-m-d h:i A") : NULL,
-            
-            // "clientes"=>$this->resource->clientes,
-
+            "updated_at"=>$this->resource->updated_at ? Carbon::parse($this->resource->updated_at)->format("Y-m-d h:i A") : NULL,
         ];
     }
 }

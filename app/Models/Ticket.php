@@ -10,6 +10,7 @@ class Ticket extends Model
      use HasFactory;
      protected $fillable=[
         'client_id',
+        'from_id',
         'company_id',
         'event_id',
         'event_name',
@@ -18,6 +19,7 @@ class Ticket extends Model
         'fecha_inicio',
         'fecha_fin',
         'qr_code',
+        'status',
     ];
 
 
@@ -30,6 +32,10 @@ class Ticket extends Model
     {
         return $this->belongsTo(Cliente::class, 'client_id');
     }
+    public function from()
+    {
+        return $this->belongsTo(Cliente::class, 'client_id');
+    }
 
     
     public function company()
@@ -39,14 +45,15 @@ class Ticket extends Model
 
 
 
+
     public static function search($query = ''){
         if(!$query){
             return self::all();
         }
-        return self::where('name', 'like', "%$query%")
+        return self::where('event_name', 'like', "%$query%")
         ->orWhere('status', 'like', "%$query%")
-        ->orWhere('is_featured', 'like', "%$query%")
-        ->orWhereHas('clients', function($q) use ($query) {
+        ->orWhere('referencia', 'like', "%$query%")
+        ->orWhereHas('client', function($q) use ($query) {
             $q->where('name', 'like', "%$query%");
         })
         ->orWhereHas('company', function($q) use ($query) {

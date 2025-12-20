@@ -64,9 +64,9 @@ class TicketController extends Controller
         ]);
     }
 
-    public function showbyClient($client_id)
+    public function showbyClient($from_id)
     {
-        $tickets = Ticket::where('client_id', $client_id)->get();
+        $tickets = Ticket::where('from_id', $from_id)->get();
 
         return response()->json([
             "tickets" => TicketCollection::make($tickets),
@@ -108,7 +108,8 @@ class TicketController extends Controller
         // $ticket->update($request->all());
 
          $ticket->update([
-                'client_id' => $ticket->client_id,
+                'from_id' => $request->from_id,
+                'client_id' => $request->client_id,
                 'status' => 'SHARED', 
             ]);
 
@@ -132,5 +133,23 @@ class TicketController extends Controller
         return response()->json([
             "message"=>200
         ]);
+    }
+
+
+
+    public function shared($client_id)
+    {
+
+        $tickets = Ticket::
+                where('from_id', '=', $client_id)
+
+                ->where('status', '=', 'SHARED')
+                ->get();
+
+            return response()->json([
+                'code' => 200,
+                'status' => 'Listar Post destacados',
+                "tickets" => TicketCollection::make($tickets),
+            ], 200);
     }
 }
