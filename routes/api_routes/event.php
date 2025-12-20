@@ -22,8 +22,16 @@ Route::post('event/store', [EventoController::class, 'eventstore'])->name('event
 
 Route::post('event/update/{event}', [EventoController::class, 'update'])->name('event.update');
 Route::post('event/updatestatus/admin/{event}', [EventoController::class, 'updateStatusAdmin'])->name('event.updateStatusAdmin');
+
 Route::post('event/addcolaborador/{event_id}', [EventoController::class, 'addcolaborador'])->name('event.addcolaborador');
 Route::post('event/removecolaborador/{event_id}', [EventoController::class, 'removeColaborador'])->name('event.removeColaborador');
+
+
+Route::post('event/addcliente/{event_id}', [EventoController::class, 'addClientToEvent'])->name('event.addClientToEvent');
+Route::post('event/removecliente/{event_id}', [EventoController::class, 'removeCliente'])->name('event.removeCliente');
+
+
+
 Route::put('event/asistencia/{event_id}/{client_id}', [EventoController::class, 'asistencia'])->name('event.asistencia');
 Route::put('event/sendConfirmation/{event_id}/{client_id}', [EventoController::class, 'sendConfirmation'])->name('event.sendConfirmation');
 

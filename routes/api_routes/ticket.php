@@ -10,6 +10,7 @@ Route::get('ticket/show/{id}', [TicketController::class, 'show'])->name('ticket.
 Route::get('tickets/client/{from_id}', [TicketController::class, 'showbyClient'])->name('ticket.showbyClient');
 Route::get('tickets/event/{event_id}', [TicketController::class, 'showbyEvent'])->name('ticket.showbyEvent');
 Route::get('tickets/shared/{client_id}', [TicketController::class, 'shared'])->name('ticket.shared');
+Route::get('tickets/tiketsactivos/{client_id}', [TicketController::class, 'tiketsactivos'])->name('ticket.tiketsactivos');
 
 Route::get('ticket/search/{request}', [TicketController::class, 'search'])
     ->name('ticket.search');

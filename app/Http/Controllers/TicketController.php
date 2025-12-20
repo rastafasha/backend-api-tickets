@@ -16,13 +16,13 @@ class TicketController extends Controller
      */
     public function index(Request $request)
     {
-         $tickets = Ticket::orderBy("id", "desc")
-        ->get();
-                    
+        $tickets = Ticket::orderBy("id", "desc")
+            ->get();
+
         return response()->json([
             "tickets" => $tickets,
-            
-        ]);  
+
+        ]);
     }
 
     /**
@@ -33,18 +33,18 @@ class TicketController extends Controller
      */
     public function storeTicket(Request $request)
     {
-        
+
         $ticket = Ticket::create($request->all());
 
-       
+
 
         $request->request->add([
-            "ticket_id" =>$ticket->id
+            "ticket_id" => $ticket->id
         ]);
 
 
         return response()->json([
-            "message"=>200,
+            "message" => 200,
         ]);
     }
 
@@ -60,7 +60,7 @@ class TicketController extends Controller
 
         return response()->json([
             "ticket" => TicketResource::make($ticket),
-            
+
         ]);
     }
 
@@ -70,7 +70,7 @@ class TicketController extends Controller
 
         return response()->json([
             "tickets" => TicketCollection::make($tickets),
-            
+
         ]);
     }
     public function showbyEvent($event_id)
@@ -79,7 +79,7 @@ class TicketController extends Controller
 
         return response()->json([
             "tickets" => TicketCollection::make($tickets),
-            
+
         ]);
     }
     /**
@@ -96,8 +96,8 @@ class TicketController extends Controller
         $ticket->update($request->all());
 
         return response()->json([
-            "message"=>200,
-            "ticket"=>$ticket
+            "message" => 200,
+            "ticket" => $ticket
         ]);
     }
 
@@ -107,17 +107,19 @@ class TicketController extends Controller
         $ticket = Ticket::findOrFail($id);
         // $ticket->update($request->all());
 
-         $ticket->update([
-                'from_id' => $request->from_id,
-                'client_id' => $request->client_id,
-                'status' => 'SHARED', 
-            ]);
+        $ticket->update([
+            'from_id' => $request->from_id,
+            'client_id' => $request->client_id,
+            'status' => 'SHAREDACTIVE',
+        ]);
 
         return response()->json([
-            "message"=>200,
-            "ticket"=>$ticket
+            "message" => 200,
+            "ticket" => $ticket
         ]);
     }
+
+
 
     /**
      * Remove the specified resource from storage.
@@ -125,13 +127,13 @@ class TicketController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-   public function destroy($id)
+    public function destroy($id)
     {
-       $ticket = Ticket::findOrFail($id);
-        
+        $ticket = Ticket::findOrFail($id);
+
         $ticket->delete();
         return response()->json([
-            "message"=>200
+            "message" => 200
         ]);
     }
 
@@ -141,15 +143,31 @@ class TicketController extends Controller
     {
 
         $tickets = Ticket::
-                where('from_id', '=', $client_id)
+            where('client_id', '=', $client_id)
 
-                ->where('status', '=', 'SHARED')
-                ->get();
+            ->where('status', '=', 'SHARED')
+            ->get();
 
-            return response()->json([
-                'code' => 200,
-                'status' => 'Listar Post destacados',
-                "tickets" => TicketCollection::make($tickets),
-            ], 200);
+        return response()->json([
+            'code' => 200,
+            'status' => 'Listar tickets compartidos recibidos',
+            "tickets" => TicketCollection::make($tickets),
+        ], 200);
+    }
+
+    public function tiketsactivos(Request $request, $client_id)
+    {
+
+        $tickets = Ticket::
+            where('client_id', '=', $client_id)
+
+            ->where('status', '=', 'SHAREDACTIVE')
+            ->get();
+
+        return response()->json([
+            'code' => 200,
+            'status' => 'Listar tickets compartidos recibidos',
+            "tickets" => TicketCollection::make($tickets),
+        ], 200);
     }
 }

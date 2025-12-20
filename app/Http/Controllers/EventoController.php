@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Evento;
+use App\Models\Ticket;
 use App\Models\Cliente;
 use App\Models\Payment;
 use Illuminate\Http\Request;
@@ -445,6 +446,47 @@ class EventoController extends Controller
                             "email"=> $client->email,
                             "full_name" =>$client->name.' '.$client->surname,
                         ]: NULL,
+        ]);
+    }
+
+      public function addClientToEvent(Request $request, $id)
+    {
+       
+        $event = Evento::findOrFail($id);
+        
+        $client_id = $request->client_id;
+        $event_id = $request->event_id;
+        $ticket_id = $request->ticket_id;
+
+        
+        DB::table('eventos_clientes')->updateOrInsert(
+            [
+                'event_id' => $event_id,
+                'client_id' => $client_id
+            ],
+            [
+                'updated_at' => now(),
+                'created_at' => now()
+            ]
+        );  
+       
+        
+        $ticket = Ticket::findOrFail($ticket_id);
+        // $ticket->update($request->all());
+
+         $ticket->update([
+                'id' => $request->ticket_id,
+                'status' => 'SHAREDACTIVE', 
+            ]);
+        
+        $event->update($request->all());
+
+        
+
+        return response()->json([
+            "message"=>200,
+            "event"=>$event,
+            "ticket"=>$ticket,
         ]);
     }
     
