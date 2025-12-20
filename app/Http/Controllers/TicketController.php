@@ -73,9 +73,12 @@ class TicketController extends Controller
 
         ]);
     }
-    public function showbyEvent($event_id)
+    public function showbyEvent(Request $request, $event_id, $client_id )
     {
-        $tickets = Ticket::where('event_id', $event_id)->get();
+        $tickets = Ticket::where('event_id', $event_id)
+        ->where('client_id', $client_id)
+        ->where('status', '=', 'ACTIVE')
+        ->get();
 
         return response()->json([
             "tickets" => TicketCollection::make($tickets),
@@ -110,7 +113,7 @@ class TicketController extends Controller
         $ticket->update([
             'from_id' => $request->from_id,
             'client_id' => $request->client_id,
-            'status' => 'SHAREDACTIVE',
+            'status' => 'SHARED',
         ]);
 
         return response()->json([
@@ -144,7 +147,6 @@ class TicketController extends Controller
 
         $tickets = Ticket::
             where('client_id', '=', $client_id)
-
             ->where('status', '=', 'SHARED')
             ->get();
 
@@ -155,7 +157,7 @@ class TicketController extends Controller
         ], 200);
     }
 
-    public function tiketsactivos(Request $request, $client_id)
+    public function tiketsactivosCompartidos(Request $request, $client_id)
     {
 
         $tickets = Ticket::
@@ -166,7 +168,23 @@ class TicketController extends Controller
 
         return response()->json([
             'code' => 200,
-            'status' => 'Listar tickets compartidos recibidos',
+            'status' => 'Listar tickets  activos compartidos',
+            "tickets" => TicketCollection::make($tickets),
+        ], 200);
+    }
+
+    public function tiketsactivos(Request $request, $client_id)
+    {
+
+        $tickets = Ticket::
+            where('client_id', '=', $client_id)
+
+            ->where('status', '=', 'ACTIVE')
+            ->get();
+
+        return response()->json([
+            'code' => 200,
+            'status' => 'Listar tickets compartidos activos recibidos',
             "tickets" => TicketCollection::make($tickets),
         ], 200);
     }

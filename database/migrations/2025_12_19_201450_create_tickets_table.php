@@ -26,8 +26,8 @@ class CreateTicketsTable extends Migration
             $table->timestamp('fecha_fin')->nullable();
             $table->text('qr_code')->nullable();
             $table->enum('status', [
-                 'INACTIVE', 'ACTIVE',  'SHARED', 'SHAREDACTIVE','EXPIRED'
-                ])->default('INACTIVE');
+                  'ACTIVE',  'SHARED', 'SHAREDACTIVE','EXPIRED'
+                ])->default('ACTIVE');
 
             $table->timestamps();
             $table->softDeletes();

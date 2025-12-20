@@ -20,6 +20,7 @@ class CreateEventosTable extends Migration
             $table->unsignedBigInteger('company_id')->nullable();
             $table->timestamp('fecha_inicio');
             $table->timestamp('fecha_fin')->nullable();
+            $table->string('tickets_disponibles')->nullable();
             $table->double('precio_general', 15, 2);
             $table->double('precio_estudiantes', 15, 2)->nullable();
             $table->double('precio_especialistas', 15, 2)->nullable();

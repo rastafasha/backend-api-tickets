@@ -17,8 +17,8 @@ class Evento extends Model
         'precio_general',
         'precio_estudiantes',
         'precio_especialistas',
-        // 'client_id',
         'company_id',
+        'tickets_disponibles',
         'is_featured',
         'status',
     ];

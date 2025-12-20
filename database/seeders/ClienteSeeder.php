@@ -40,22 +40,22 @@ class ClienteSeeder extends Seeder
             $client->assignRole('CLIENT');
 
             // Create up to 5 events for each Cliente
-            $eventsCount = rand(1, 5);
-            for ($j = 0; $j < $eventsCount; $j++) {
-                $event = Evento::create([
-                    'name' => $faker->firstName,
-                    'precio_general' => 1000,
-                    'precio_estudiantes' => 1000,
-                    'precio_especialistas' => 1000,
-                    'fecha_inicio' => $faker->date(),
-                    'fecha_fin' => $faker->date(),
-                    'avatar' => null,
-                    'company_id' => rand(1, 5),
-                    'status' => $faker->randomElement(['PUBLISHED', 'INACTIVE',
-                    'RETIRED','FINISHED']),
-                ]);
-                $event->clients()->attach($client);
-            }
+            // $eventsCount = rand(1, 5);
+            // for ($j = 0; $j < $eventsCount; $j++) {
+            //     $event = Evento::create([
+            //         'name' => $faker->firstName,
+            //         'precio_general' => 1000,
+            //         'precio_estudiantes' => 1000,
+            //         'precio_especialistas' => 1000,
+            //         'fecha_inicio' => $faker->date(),
+            //         'fecha_fin' => $faker->date(),
+            //         'avatar' => null,
+            //         'company_id' => rand(1, 5),
+            //         'status' => $faker->randomElement(['PUBLISHED', 'INACTIVE',
+            //         'RETIRED','FINISHED']),
+            //     ]);
+            //     $event->clients()->attach($client);
+            // }
         }
     }
 }

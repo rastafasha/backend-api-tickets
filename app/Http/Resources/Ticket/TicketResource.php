@@ -28,10 +28,11 @@ class TicketResource extends JsonResource
             //     "name"=>$this->resource->from->name,
             // ]:NULL,
             "client_id"=>$this->resource->client_id,
-            // "client"=>$this->resource->client ? [
-            //     "id"=>$this->resource->client->id,
-            //     "name"=>$this->resource->client->name,
-            // ]:NULL,
+            "client"=>$this->resource->client ? [
+                "id"=>$this->resource->client->id,
+                "name"=>$this->resource->client->name,
+                "email"=>$this->resource->client->email,
+            ]:NULL,
             "company_id"=>$this->resource->company_id,
             "company"=>$this->resource->company ? [
                 "id"=>$this->resource->company->id,

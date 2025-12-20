@@ -23,6 +23,7 @@ class EventoResource extends JsonResource
             "precio_estudiantes"=>$this->resource->precio_estudiantes,
             "precio_especialistas"=>$this->resource->precio_especialistas,
             "status"=>$this->resource->status,
+            "tickets_disponibles"=>$this->resource->tickets_disponibles,
             "company_id"=>$this->resource->company_id,
             "company"=>$this->resource->company ? [
                 "id"=>$this->resource->company->id,

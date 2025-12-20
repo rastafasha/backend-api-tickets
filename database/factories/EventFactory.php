@@ -14,11 +14,12 @@ class EventFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->name,
+            'name' => $this->faker->sentence(3),
             'description' => $this->faker->description,
             'fecha_inicio' => $this->faker->dateTimeBetween('-30 months', '6 months'),
             'fecha_fin' => $this->faker->dateTimeBetween('-30 months', '6 months'),
             'company_id' => Company::factory(),
+            'tickets_disponibles' => $this->faker->numberBetween(10, 500),
             'precio_general' => $this->faker->numberBetween(500, 2000),
             'precio_estudiantes' => $this->faker->numberBetween(500, 2000),
             'precio_especialistas' => $this->faker->numberBetween(500, 2000),
