@@ -122,6 +122,20 @@ class TicketController extends Controller
         ]);
     }
 
+    public function verify(Request $request)
+    {
+        $tickets = Ticket::where('code', $request->code)
+            ->where('event_id', $request->event_id)
+            ->where('status', 'ACTIVE')
+            ->get();
+
+        return response()->json([
+            'code' => 200,
+            'status' => 'Verificar ticket por codigo y evento',
+            "tickets" => TicketCollection::make($tickets),
+        ], 200);
+    }
+
 
 
     /**

@@ -4,15 +4,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdminPaymentController;
 
-//pagos
 
-// Route::get('pagos', [AdminPaymentController::class, 'index'])
-//     ->name('payments.index');
+// Pagos
 Route::get('payment', [AdminPaymentController::class, 'index'])
     ->name('payment.index');
-Route::post('payment/store', [AdminPaymentController::class, 'paymentStore'])
-    ->name('payment.store');
-
 
 Route::get('payment/show/{payment}', [AdminPaymentController::class, 'paymentShow'])
     ->name('payment.show');
@@ -29,18 +24,9 @@ Route::get('payment/recientes/', [AdminPaymentController::class, 'recientes'])
 Route::get('payment/pendientes', [AdminPaymentController::class, 'pagosPendientes'])
     ->name('payment.pagosPendientes');
 
-Route::get('payment/pendientesbydoctor/{doctor_id}', [AdminPaymentController::class, 'pagosPendientesShowId'])
-    ->name('payment.pagosPendientesShowId');
-
-Route::post('payment/upload', [AdminPaymentController::class, 'upload'])
-    ->name('payment.upload');
-
-Route::delete('payment/delete-foto/{id}', [AdminPaymentController::class, 'deleteFotoPayment'])
-    ->name('payment.deleteFotoPayment');
-
 Route::get('payment/search/', [AdminPaymentController::class, 'search'])
     ->name('payment.search');
-    
+
 Route::get('payment/pagosbyUser/{id}', [AdminPaymentController::class, 'pagosbyUser'])
     ->name('payment.pagosbyUser');
 
@@ -50,17 +36,16 @@ Route::get('payment/pendientesbyStudent/{id}', [AdminPaymentController::class, '
 Route::put('payment/update/status/{payment:id}', [AdminPaymentController::class, 'updateStatus'])
     ->name('payment.updateStatus');
 
-
 Route::get('payment/paymentbyeventid/{event_id}', [AdminPaymentController::class, 'paymentbyevent'])
-->name('payment.paymentbyevent');
-    
+    ->name('payment.paymentbyevent');
+
 Route::get('payment/paymentbyeventbyclient/{event_id}/{client_id}', [AdminPaymentController::class, 'paymentbyeventbyclient'])
-->name('payment.paymentbyeventbyclient');
+    ->name('payment.paymentbyeventbyclient');
 
-
-// Route for checkDebtStatus
+// Check debt status routes
 Route::get('payment/check-debt-status/{parent_id}/{student_id}', [AdminPaymentController::class, 'checkDebtStatus'])
     ->name('payment.checkDebtStatus');
+
 Route::get('payment/check-debt-status-p/{parent_id}', [AdminPaymentController::class, 'checkDebtStatusByParent'])
     ->name('payment.checkDebtStatusByParent');
 
@@ -70,5 +55,5 @@ Route::get('payment/debt-by-parent/{parent_id}', [AdminPaymentController::class,
 Route::post('payment/pay-debt/{client_id}/{event_id}', [AdminPaymentController::class, 'payDebtForEvent'])
     ->name('payment.payDebtForEvent');
 
-Route::post('payment/generate-monthly-debt', [AdminPaymentController::class, 'generateMonthlyDebtForParents'])
-    ->name('payment.generateMonthlyDebtForParents');
+
+

@@ -11,9 +11,10 @@ Route::get('event/show/{id}', [EventoController::class, 'show'])->name('event.sh
 Route::get('event/clientsbyEvent/{id}', [EventoController::class, 'clientsbyEvent'])->name('event.clientsbyEvent');
 Route::get('event/userbyEvent/{id}', [EventoController::class, 'userbyEvent'])->name('event.userbyEvent');
 
+
 Route::get('event/eventsbyuser/{user_id}', [EventoController::class, 'eventsbyUser'])->name('event.eventsbyUser');
 
-Route::get('event/eventsbyclient/{client_id}', [EventoController::class, 'eventbyClient'])->name('event.eventsbyUser');
+Route::get('event/eventsbyclient/{client_id}', [EventoController::class, 'eventbyClient'])->name('event.eventsbyClient');
 
 Route::get('event/search/{request}', [EventoController::class, 'search'])
     ->name('event.search');

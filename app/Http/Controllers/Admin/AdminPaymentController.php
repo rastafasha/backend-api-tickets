@@ -15,20 +15,15 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+
 use App\Mail\EnrollmentNotificationMail;
 use App\Http\Resources\Appointment\Payment\PaymentCollection;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class AdminPaymentController extends Controller
 {
-    // /**
-    //  * Create a new AuthController instance.
-    //  *
-    //  * @return void
-    //  */
-    // public function __construct()
-    // {
-    //     $this->middleware('jwt.verify');
-    // }
+
+
 
     /**
      * Display a listing of the resource.
@@ -553,68 +548,8 @@ $status,
      * @param int $event_id
      * @return \Illuminate\Http\JsonResponse
      */
-    /**
-     * Generate monthly debt for representatives based on student's matricula.
-     * This function should be called after the first day of the month.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function generateMonthlyDebtForParents()
-    {
-        $now = Carbon::now();
 
-        // Check if today is the first day of the month
-        if ($now->day !== 1) {
-            return response()->json([
-                'message' => 'Today is not the first day of the month.',
-                'date' => $now->toDateString(),
-            ]);
-        }
 
-        // Get all eventos with their parent (representative)
-        $eventos = Student::with('parent')->get();
-
-        foreach ($eventos as $evento) {
-            $client = $evento->parent;
-            if (!$client) {
-                continue;
-            }
-
-            // Check if a debt payment for this month already exists for this parent and student
-            $existingDebt = Payment::where('parent_id', $client->id)
-                ->where('event_id', $evento->id)
-                ->whereDate('created_at', '>=', $now->startOfMonth())
-                ->whereDate('created_at', '<=', $now->endOfMonth())
-                ->where('status_deuda', '!=', 'PAID')
-                ->first();
-
-            if ($existingDebt) {
-                // Debt already generated for this month
-                continue;
-            }
-
-            // Create new debt payment for the parent's matricula amount
-            $debtPayment = new Payment();
-            $debtPayment->parent_id = $client->id;
-            $debtPayment->event_id = $evento->id;
-            $debtPayment->monto = $evento->matricula;
-            $debtPayment->status_deuda = 'DEUDA';
-            $debtPayment->status = 'PENDING';
-            $debtPayment->referencia = 'Monthly debt for ' . $now->format('F Y');
-            $debtPayment->metodo = 'DEUDA';
-            $debtPayment->bank_name = '';
-            $debtPayment->bank_destino = '';
-            $debtPayment->nombre = $client->name ?? '';
-            $debtPayment->email = $client->email ?? '';
-            $debtPayment->avatar = null;
-            $debtPayment->save();
-        }
-
-        return response()->json([
-            'message' => 'Monthly debts generated successfully.',
-            'date' => $now->toDateString(),
-        ]);
-    }
 
     public function paymentbyevent(Request $request, $event_id)
     {
@@ -650,6 +585,7 @@ $status,
     }
 
 
+
     /**
      * Store a new ticket based on approved payment.
      *
@@ -679,16 +615,61 @@ $status,
                 ]);
             }
 
-            // Generate QR code (you can customize this logic)
+            // Generate QR code data
             $qrCodeData = json_encode([
-                'ticket_id' => uniqid(),
+                'ticket_id' => uniqid('TKT-'),
                 'payment_id' => $payment->id,
                 'client_id' => $payment->client_id,
+                'client_name' => $client->name ?? '',
                 'event_id' => $payment->event_id,
+                'event_name' => $event->name ?? 'Event',
                 'referencia' => $payment->referencia,
                 'monto' => $payment->monto,
-                'created_at' => now()->toISOString()
+                'fecha_evento' => $event->fecha_inicio ?? '',
+                'created_at' => now()->toISOString(),
+                'verification_url' => url('/api/tickets/verify/' . $payment->referencia)
             ]);
+            
+
+
+
+            // Generate QR code using external API (more reliable)
+            try {
+                // Use QRCode API service for generating QR codes
+                $qrApiUrl = 'https://api.qrserver.com/v1/create-qr-code/';
+                $qrParams = http_build_query([
+                    'size' => '300x300',
+                    'data' => $qrCodeData,
+                    'format' => 'png',
+                    'margin' => '10'
+                ]);
+                
+                $qrApiUrl .= '?' . $qrParams;
+                
+                // Fetch QR code image from API
+                $qrImageContent = file_get_contents($qrApiUrl);
+                
+                if ($qrImageContent !== false) {
+                    // Convert to base64 string
+                    $qrCodeBase64 = 'data:image/png;base64,' . base64_encode($qrImageContent);
+                } else {
+                    throw new \Exception('Failed to fetch QR code from API');
+                }
+                
+            } catch (\Exception $qrException) {
+                // Fallback: Use Simple-QRCode library if available, or text-based QR
+                \Log::warning('QR Code API failed, trying library fallback: ' . $qrException->getMessage());
+                
+                try {
+                    // Try Simple-QRCode library with minimal configuration
+                    $qrCodeImage = QrCode::size(200)->generate($qrCodeData);
+                    $qrCodeBase64 = 'data:image/png;base64,' . base64_encode($qrCodeImage);
+                } catch (\Exception $libraryException) {
+                    // Final fallback: Store QR data as text
+                    \Log::warning('Both QR methods failed, using text fallback: ' . $libraryException->getMessage());
+                    $qrCodeBase64 = 'QR_TEXT:' . $qrCodeData;
+                }
+            }
             
             // Create the ticket
             $ticket = Ticket::create([
@@ -700,11 +681,11 @@ $status,
                 'monto' => $payment->monto,
                 'fecha_inicio' => $event->fecha_inicio ?? null, // Get from event
                 'fecha_fin' => $event->fecha_fin ?? null, // Get from event
-                'qr_code' => base64_encode($qrCodeData) // Store QR code as base64
+                'qr_code' => $qrCodeBase64 // Store QR code as base64 data URL
             ]);
 
             return response()->json([
-                'message' => 'Ticket created successfully',
+                'message' => 'Ticket created successfully with QR code',
                 'ticket' => $ticket
             ]);
 
@@ -717,51 +698,7 @@ $status,
         }
     }
 
-    /**
-     * Generate initial debt for a single student immediately upon registration.
-     *
-     * @param int $eventoId
-     * @return void
-     */
-    public function generateInitialDebtForStudent($eventoId)
-    {
-        $now = Carbon::now();
-        $evento = Evento::with(relations: 'clientes')->find($eventoId);
 
-        if (!$evento || !$evento->parent) {
-            return;
-        }
 
-        $client = $evento->client;
-
-        // Check if a debt payment for this month already exists for this client and student
-        $existingDebt = Payment::where('client_id', $client->id)
-            ->where('event_id', $evento->id)
-            ->whereDate('created_at', '>=', $now->startOfMonth())
-            ->whereDate('created_at', '<=', $now->endOfMonth())
-            ->where('status_deuda', '!=', 'PAID')
-            ->first();
-
-        if ($existingDebt) {
-            // Debt already generated for this month
-            return;
-        }
-
-        // Create new debt payment for the client's matricula amount
-        $debtPayment = new Payment();
-        $debtPayment->client_id = $client->id;
-        $debtPayment->event_id = $evento->id;
-        $debtPayment->monto = $evento->matricula;
-        $debtPayment->status_deuda = 'DEUDA';
-        $debtPayment->status = 'PENDING';
-        $debtPayment->referencia = 'Initial debt for ' . $now->format('F Y');
-        $debtPayment->metodo = 'DEUDA';
-        $debtPayment->bank_name = '';
-        $debtPayment->bank_destino = '';
-        $debtPayment->nombre = $client->name ?? '';
-        $debtPayment->email = $client->email ?? '';
-        $debtPayment->avatar = null;
-        $debtPayment->save();
-    }
 }
 
