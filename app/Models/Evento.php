@@ -22,6 +22,7 @@ class Evento extends Model
         'is_featured',
         'status',
         'pais_id',
+        'pais',
     ];
 
 
@@ -67,6 +68,9 @@ class Evento extends Model
         ->orWhere('is_featured', 'like', "%$query%")
         ->orWhereHas('clients', function($q) use ($query) {
             $q->where('name', 'like', "%$query%");
+        })
+        ->orWhereHas('pais', function($q) use ($query) {
+            $q->where('code', 'like', "%$query%");
         })
         ->orWhereHas('company', function($q) use ($query) {
             $q->where('name', 'like', "%$query%");

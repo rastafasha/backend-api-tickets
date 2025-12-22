@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Resources\Evento\EventoResource;
+use App\Http\Resources\Evento\EventoCollection;
 
 class EventoController extends Controller
 {
@@ -33,8 +34,8 @@ class EventoController extends Controller
                     
         return response()->json([
             // "total" =>$events->total(),
-            "events" => $events,
-            // "events" => EventoCollection::make($events),
+            // "events" => $events,
+            "events" => EventoCollection::make($events),
             
         ]);          
     }
