@@ -22,23 +22,23 @@ class TicketResource extends JsonResource
             "monto"=>$this->resource->monto,
             "status"=>$this->resource->status,
             "qr_code"=>$this->resource->qr_code,
-            "from_id"=>$this->resource->from_id,
-            // "from"=>$this->resource->from ? [
-            //     "id"=>$this->resource->from->id,
-            //     "name"=>$this->resource->from->name,
-            // ]:NULL,
-            "client_id"=>$this->resource->client_id,
+            "from_id"=>$this->resource->from_id || NULL,
+            "from"=>$this->resource->from ? [
+                "id"=>$this->resource->from->id,
+                "name"=>$this->resource->from->name,
+            ]:NULL,
+            "client_id"=>$this->resource->client_id || NULL,
             "client"=>$this->resource->client ? [
                 "id"=>$this->resource->client->id,
                 "name"=>$this->resource->client->name,
                 "email"=>$this->resource->client->email,
             ]:NULL,
-            "company_id"=>$this->resource->company_id,
+            "company_id"=>$this->resource->company_id || NULL,
             "company"=>$this->resource->company ? [
                 "id"=>$this->resource->company->id,
                 "name"=>$this->resource->company->name,
             ]:NULL,
-            "event_id"=>$this->resource->event_id,
+            "event_id"=>$this->resource->event_id || NULL,
             "event"=>$this->resource->event ? [
                 "id"=>$this->resource->event->id,
                 "name"=>$this->resource->event->name,

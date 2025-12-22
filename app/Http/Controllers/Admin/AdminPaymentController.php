@@ -627,7 +627,7 @@ $status,
                 'monto' => $payment->monto,
                 'fecha_evento' => $event->fecha_inicio ?? '',
                 'created_at' => now()->toISOString(),
-                'verification_url' => url('/api/tickets/verify/' . $payment->referencia)
+                'verification_url' => url('/api/ticket/verify/' . $payment->referencia)
             ]);
             
 

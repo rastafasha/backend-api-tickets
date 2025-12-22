@@ -122,20 +122,6 @@ class TicketController extends Controller
         ]);
     }
 
-    public function verify(Request $request)
-    {
-        $tickets = Ticket::where('code', $request->code)
-            ->where('event_id', $request->event_id)
-            ->where('status', 'ACTIVE')
-            ->get();
-
-        return response()->json([
-            'code' => 200,
-            'status' => 'Verificar ticket por codigo y evento',
-            "tickets" => TicketCollection::make($tickets),
-        ], 200);
-    }
-
 
 
     /**
@@ -202,4 +188,50 @@ class TicketController extends Controller
             "tickets" => TicketCollection::make($tickets),
         ], 200);
     }
+
+
+    public function search(Request $request){
+        return Ticket::search($request->buscar);
+
+        // return response()->json([
+        //     'code' => 200,
+        //     'status' => 'Listar ticket por referencia',
+        //     "ticket" => Ticket::search($request->buscar),
+        // ], 200);
+    }
+
+
+
+    public function verify(Request $request)
+    {
+        $referencia = $request->referencia;
+        $ticket = Ticket::where('referencia', $request->referencia)
+            // ->where('event_id', $request->event_id)
+            // ->where('status', 'ACTIVE')
+            ->first();
+
+        // Check if ticket exists
+        if (!$ticket) {
+            return response()->json([
+                'code' => 404,
+                'status' => 'Ticket no encontrado',
+                'referencia' => $referencia,
+            ], 404);
+        }
+
+        // Update the ticket
+        $ticket->update([
+            'from_id' => $request->from_id,
+            'client_id' => $request->client_id,
+            'status' => 'EXPIRED',
+        ]);
+
+        return response()->json([
+            'code' => 200,
+            'status' => 'Verificar ticket por codigo y evento',
+            'referencia' => $referencia,
+            "ticket" => TicketResource::make($ticket),
+        ], 200);
+    }
+
 }

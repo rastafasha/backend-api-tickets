@@ -20,7 +20,7 @@ Route::get('ticket/search/{request}', [TicketController::class, 'search'])
 Route::post('ticket/store', [TicketController::class, 'storeTicket'])->name('ticket.storeTicket');
 
 Route::post('ticket/compartir/{ticket_id}', [TicketController::class, 'compartir'])->name('ticket.compartir');
-Route::post('tickets/verify/{request}', [TicketController::class, 'verify'])->name('ticket.verify');
+Route::post('ticket/verify/', [TicketController::class, 'verify'])->name('ticket.verify');
 
 Route::post('ticket/update/{ticket_id}', [TicketController::class, 'update'])->name('ticket.update');
 
