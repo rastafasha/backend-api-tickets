@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Models\Evento;
 use App\Models\User;
 use App\Models\Company;
+use App\Fakers\EventFakerProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class EventFactory extends Factory
@@ -13,9 +14,12 @@ class EventFactory extends Factory
 
     public function definition()
     {
+        // Add our custom provider to the existing faker instance
+        $this->faker->addProvider(new EventFakerProvider($this->faker));
+
         return [
-            'name' => $this->faker->sentence(3),
-            'description' => $this->faker->description,
+            'name' => $this->faker->evento(),
+            'description' => $this->faker->text($maxNbChars = 200),
             'fecha_inicio' => $this->faker->dateTimeBetween('-30 months', '6 months'),
             'fecha_fin' => $this->faker->dateTimeBetween('-30 months', '6 months'),
             'company_id' => Company::factory(),

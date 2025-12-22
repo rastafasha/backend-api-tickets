@@ -33,9 +33,9 @@ class Company extends Model
     }
 
    
-    public function evento()
+    public function eventos()
     {
-        return $this->belongsTo(Evento::class, 'event_id');
+        return $this->hasMany(Evento::class, 'company_id');
     }
 
 
