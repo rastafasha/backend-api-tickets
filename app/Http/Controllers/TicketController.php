@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\Ticket\TicketCollection;
 use App\Http\Resources\Ticket\TicketResource;
+use Illuminate\Support\Facades\DB;
 use App\Models\Ticket;
 use Illuminate\Http\Request;
 
@@ -57,8 +58,20 @@ class TicketController extends Controller
     public function show($id)
     {
         $ticket = Ticket::find($id);
+        
+        $event = $ticket->event->id;
+
+         //agregamos si el cliente asisitio al evento
+            $asistencia = DB::table('eventos_clientes')
+                ->where('event_id', $ticket->event->id)
+                ->where('client_id', $ticket->client_id)
+                ->value('asistencia');
+
+
 
         return response()->json([
+            "event" => $event,
+            "asistencia" => $asistencia,
             "ticket" => TicketResource::make($ticket),
 
         ]);
@@ -77,7 +90,7 @@ class TicketController extends Controller
     {
         $tickets = Ticket::where('event_id', $event_id)
         ->where('client_id', $client_id)
-        ->where('status', '=', 'ACTIVE')
+        // ->where('status', '=', 'ACTIVE')
         ->get();
 
         return response()->json([
@@ -189,6 +202,23 @@ class TicketController extends Controller
         ], 200);
     }
 
+     public function tiketUsedorExpired(Request $request, $client_id)
+    {
+
+        $tickets = Ticket::
+            where('client_id', '=', $client_id)
+
+            ->where('status', '=', 'USED')
+            ->orWhere('status', '=', 'EXPIRED')
+            ->get();
+
+        return response()->json([
+            'code' => 200,
+            'status' => 'Listar tickets usados o expirados',
+            "tickets" => TicketCollection::make($tickets),
+        ], 200);
+    }
+
 
     public function search(Request $request){
         return Ticket::search($request->buscar);
@@ -223,7 +253,7 @@ class TicketController extends Controller
         $ticket->update([
             'from_id' => $request->from_id,
             'client_id' => $request->client_id,
-            'status' => 'EXPIRED',
+            'status' => 'USED',
         ]);
 
         return response()->json([

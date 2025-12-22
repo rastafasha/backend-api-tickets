@@ -203,7 +203,7 @@ class EventoController extends Controller
      public function eventbyClient(Request $request, $client_id)
     {
         // $user = User::find($client_id);
-        $client = Cliente::with(['eventos', 'payments'])->findOrFail($client_id);
+        $client = Cliente::with(['eventos', 'payments', ])->findOrFail($client_id);
         $events = $client->eventos()->orderBy('created_at', 'DESC')->get();
 
         // Add purchase count (quantity of tickets/payments) for each event by this client
@@ -211,12 +211,20 @@ class EventoController extends Controller
             $event->purchase_count = $client->payments()->where('event_id', $event->id)->count();
             return $event;
         });
+        //agregamos si el cliente asisitio al evento
+        foreach ($events as $event) {
+            $asistencia = DB::table('eventos_clientes') 
+                ->where('event_id', $event->id)
+                ->where('client_id', $client->id)
+                ->value('asistencia');
+            $event->asistencia = $asistencia;
+        }
 
         return response()->json([
             'code' => 200,
             'status' => 'success',
             'client' => $client,
-            // 'events' => $events,
+            'asistencia' => $asistencia,
         ], 200);
     }
 

@@ -32,6 +32,7 @@ class ClienteSeeder extends Seeder
                 'gender' => $faker->randomElement(['1', '2']),
                 'address' => $faker->address,
                 'avatar' => null,
+                'pais_id' => rand(1, 5),
 
                 'status' => $faker->randomElement(['ACTIVE', 'INACTIVE']),
             ]);

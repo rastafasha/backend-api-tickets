@@ -91,6 +91,9 @@ Route::group(['middleware' => 'api'], function ($router) {
     // ticket
     require __DIR__ . '/api_routes/ticket.php';
     
+    // pais
+    require __DIR__ . '/api_routes/pais.php';
+    
 
 
 

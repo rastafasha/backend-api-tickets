@@ -21,6 +21,7 @@ class Evento extends Model
         'tickets_disponibles',
         'is_featured',
         'status',
+        'pais_id',
     ];
 
 
@@ -45,6 +46,10 @@ class Evento extends Model
     public function company()
     {
         return $this->belongsTo(Company::class, 'company_id');
+    }
+    public function pais()
+    {
+        return $this->belongsTo(Pais::class, 'pais_id');
     }
 
 

@@ -3,17 +3,18 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use App\Models\Pais;
 use App\Models\Payment;
 use App\Traits\HavePermission;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Auth\Authenticatable;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Model;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
-use Illuminate\Auth\Authenticatable;
 
 class Cliente extends Model implements JWTSubject, AuthenticatableContract
 {
@@ -49,6 +50,7 @@ class Cliente extends Model implements JWTSubject, AuthenticatableContract
         'address',
         'avatar',
         'status',
+        'pais_id',
 
     ];
 
@@ -130,6 +132,10 @@ class Cliente extends Model implements JWTSubject, AuthenticatableContract
     public function payments()
     {
         return $this->hasMany(Payment::class, 'client_id');
+    }
+    public function pais()
+    {
+        return $this->belongsTo(Pais::class, 'pais_id');
     }
 
     // buscador

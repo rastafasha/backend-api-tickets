@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Pais;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Company extends Model
 {
@@ -13,6 +14,7 @@ class Company extends Model
         'description',
         'avatar',
         'user_id',
+        'pais_id',
     ];
 
 
@@ -23,6 +25,11 @@ class Company extends Model
     public function users()
     {
         return $this->belongsToMany(User::class, 'company_users', 'company_id', 'user_id');
+    }
+
+    public function pais()
+    {
+        return $this->belongsTo(Pais::class, 'pais_id');
     }
 
    

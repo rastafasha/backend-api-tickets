@@ -17,32 +17,33 @@ class TicketResource extends JsonResource
     {
         return [
             "id"=>$this->resource->id,
-            "event_name"=>$this->resource->event_name,
             "referencia"=>$this->resource->referencia,
             "monto"=>$this->resource->monto,
             "status"=>$this->resource->status,
             "qr_code"=>$this->resource->qr_code,
-            "from_id"=>$this->resource->from_id || NULL,
+            "from_id"=>$this->resource->from_id ,
             "from"=>$this->resource->from ? [
                 "id"=>$this->resource->from->id,
                 "name"=>$this->resource->from->name,
             ]:NULL,
-            "client_id"=>$this->resource->client_id || NULL,
+            "client_id"=>$this->resource->client_id ,
             "client"=>$this->resource->client ? [
                 "id"=>$this->resource->client->id,
                 "name"=>$this->resource->client->name,
                 "email"=>$this->resource->client->email,
+                 
             ]:NULL,
-            "company_id"=>$this->resource->company_id || NULL,
+            "company_id"=>$this->resource->company_id ,
             "company"=>$this->resource->company ? [
                 "id"=>$this->resource->company->id,
                 "name"=>$this->resource->company->name,
             ]:NULL,
-            "event_id"=>$this->resource->event_id || NULL,
+            "event_id"=>$this->resource->event_id ,
             "event"=>$this->resource->event ? [
                 "id"=>$this->resource->event->id,
                 "name"=>$this->resource->event->name,
                 "event_name"=>$this->resource->event->name,
+               
             ]:NULL,
             
             "fecha_inicio"=>$this->resource->fecha_inicio ? Carbon::parse($this->resource->fecha_inicio)->format("Y/m/d") : NULL,

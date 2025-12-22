@@ -13,6 +13,7 @@ Route::get('tickets/event/{event_id}/{client_id}', [TicketController::class, 'sh
 Route::get('tickets/shared/{client_id}', [TicketController::class, 'shared'])->name('ticket.shared');
 Route::get('tickets/tiketsactivos/{client_id}', [TicketController::class, 'tiketsactivos'])->name('ticket.tiketsactivos');
 Route::get('tickets/tiketsactivosCompartidos/{client_id}', [TicketController::class, 'tiketsactivosCompartidos'])->name('ticket.tiketsactivosCompartidos');
+Route::get('tickets/usedorexpired/{client_id}', [TicketController::class, 'tiketUsedorExpired'])->name('ticket.tiketUsedorExpired');
 
 Route::get('ticket/search/{request}', [TicketController::class, 'search'])
     ->name('ticket.search');

@@ -18,9 +18,10 @@ class DatabaseSeeder extends Seeder
         $this->call(PermissionsSeeder::class);
         $this->call(TiposDePagoSeeder::class);
         $this->call(PaymentsSeeder::class);
+        $this->call(PaisSeeder::class);
         $this->call(ClienteSeeder::class);
         $this->call(CategoriesSeeder::class);
-        $this->call(BlogsSeeder::class);
+        // $this->call(BlogsSeeder::class);
         $this->call(CompanySeeder::class);
         // $this->call(CalendarioTareaSeeder::class);
     }

@@ -27,6 +27,7 @@ class Ticket extends Model
     {
         return $this->belongsTo(Evento::class, 'event_id');
     }
+
    
     public function client()
     {

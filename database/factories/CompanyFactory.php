@@ -13,6 +13,7 @@ class CompanyFactory extends Factory
     {
         return [
             'name' => $this->faker->name,
+            'pais_id' => null,
             'description' => $this->faker->description,
         ];
     }

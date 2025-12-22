@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Resources\User;
+namespace App\Http\Resources\Cliente;
 
-use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class UserResource extends JsonResource
+class ClienteResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -13,10 +12,8 @@ class UserResource extends JsonResource
      * @param  \Illuminate\Http\Request  $request
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
-    public function toArray($request): array
+    public function toArray($request)
     {
-       
-
         return [
             "id"=>$this->resource->id,
             "name"=>$this->resource->name,
@@ -42,7 +39,6 @@ class UserResource extends JsonResource
             "avatar"=> $this->resource->avatar ? env("APP_URL").$this->resource->avatar : null,
             
             "eventos"=>$this->resource->eventos,
-            "company"=>$this->resource->company,
             "roles"=>$this->resource->roles->first(),
             "created_at"=>$this->resource->created_at ? Carbon::parse($this->resource->created_at)->format("Y/m/d") : NULL,
             

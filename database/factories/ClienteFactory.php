@@ -14,6 +14,7 @@ class ClienteFactory extends Factory
         return [
             'name' => $this->faker->name,
             'surname' => $this->faker->lastName,
+            'pais_id' => null,
             // 'event_id'=> $this->faker->numberBetween(1,10),
             'email' => $this->faker->unique()->safeEmail,
             'password' => bcrypt('password'), // Add default password to satisfy non-null constraint
