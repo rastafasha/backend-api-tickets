@@ -10,10 +10,10 @@ use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
-use App\Http\Resources\Representante\RepresntanteResource;
-use App\Http\Resources\Representante\RepresntanteCollection;
+use App\Http\Resources\Cliente\ClienteResource;
+use App\Http\Resources\Cliente\ClienteCollection;
 
-class RepresentanteController extends Controller
+class ClienteController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -37,8 +37,8 @@ class RepresentanteController extends Controller
         return response()->json([
             'code' => 200,
             'status' => 'Listar todos los Usuarios con pagos en deuda',
-            'clientes' => $clientes
-            // "clientes" => RepresntanteResource::make($clientes)
+            // 'clientes' => $clientes
+            "clientes" => ClienteCollection::make($clientes)
         ], 200);
     }
 
@@ -68,9 +68,9 @@ class RepresentanteController extends Controller
 
 
         return response()->json([
-            "cliente" => $cliente,
+            // "cliente" => $cliente,
             // "cliente" => RepresntanteCollection::make($cliente),
-            // "cliente" => RepresntanteResource::make($cliente),
+            "cliente" => ClienteResource::make($cliente),
 
         ]);
     }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Cliente;
 
+use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ClienteResource extends JsonResource

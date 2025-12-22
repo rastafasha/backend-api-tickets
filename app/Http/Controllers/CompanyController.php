@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\Company\CompanyCollection;
 use App\Http\Resources\Company\CompanyResource;
 use App\Models\Evento;
 use App\Models\Company;
@@ -23,7 +24,8 @@ class CompanyController extends Controller
         ->get();
                     
         return response()->json([
-            "companies" => $companies,
+            // "companies" => $companies,
+            "companies" => CompanyCollection::make($companies),
             
         ]);          
     }
