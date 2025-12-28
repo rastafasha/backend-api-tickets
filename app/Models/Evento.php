@@ -22,6 +22,7 @@ class Evento extends Model
         'is_featured',
         'status',
         'pais_id',
+        'category_id',
         'pais',
     ];
 
@@ -51,6 +52,10 @@ class Evento extends Model
     public function pais()
     {
         return $this->belongsTo(Pais::class, 'pais_id');
+    }
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'category_id');
     }
 
 

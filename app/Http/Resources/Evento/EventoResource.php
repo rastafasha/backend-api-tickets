@@ -36,6 +36,11 @@ class EventoResource extends JsonResource
                 "title"=>$this->resource->pais->title,
                 "code"=>$this->resource->pais->code,
             ]:NULL,
+            "category_id"=>$this->resource->category_id,
+            "category"=>$this->resource->category ? [
+                "id"=>$this->resource->category->id,
+                "name"=>$this->resource->category->name,
+            ]:NULL,
             "avatar"=> $this->resource->avatar ? env("APP_URL")."storage/".$this->resource->avatar : null,
             // "avatar"=> $this->resource->avatar ? env("APP_URL").$this->resource->avatar : null,
             

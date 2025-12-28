@@ -44,6 +44,7 @@ class CompanySeeder extends Seeder
                     'avatar' => null,
                     'pais_id' => rand(1, 250),
                     'company_id' => rand(1, 5),
+                    'category_id' => rand(1, 5),
                     'status' => $faker->randomElement(['PUBLISHED', 'INACTIVE',
                     'RETIRED','FINISHED']),
                 ]);

@@ -77,7 +77,7 @@ Route::group(['middleware' => 'api'], function ($router) {
     
     
     // // category
-    // require __DIR__ . '/api_routes/category.php';
+    require __DIR__ . '/api_routes/category.php';
     
     // // blog
     // require __DIR__ . '/api_routes/blog.php';

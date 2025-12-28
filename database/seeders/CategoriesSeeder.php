@@ -15,11 +15,11 @@ class CategoriesSeeder extends Seeder
     public function run()
     {
         $categories = [
-            ['name' => 'Technology', 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'Education', 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'Health', 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'Sports', 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'Entertainment', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'Conciertos', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'Teatro', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'Stand Up', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'Exposiciones', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'Deportivos', 'created_at' => now(), 'updated_at' => now()],
         ];
 
         DB::table('categories')->insert($categories);

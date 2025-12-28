@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Evento;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
@@ -31,12 +32,9 @@ class CategoryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function categoryStore(Request $request)
     {
         // return Category::create($request->all());
-
-        $category_is_valid = Category::where("user_id", $request->user_id)->first();
-
 
         $category = Category::create($request->all());
 
@@ -51,12 +49,26 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function categoryShow($id)
     {
         $category = Category::findOrFail($id);
 
         return response()->json([
             "category" => $category,
+            
+        ]);
+    }
+    public function categoryEvents(Request $request, $id)
+    {
+        $category = Category::findOrFail($id);
+        $category_id = $category->id;
+        $events = Evento::where('category_id', $category_id)
+        ->where('status',  'PUBLISHED')
+        ->get();
+
+        return response()->json([
+            "category" => $category,
+            "events" => $events,
             
         ]);
     }
@@ -68,18 +80,15 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function categoryUpdate(Request $request, $id)
     {
-        $category_is_valid = Category::where("id", "<>", $id)->first();
         
-        $category = Category::findOrFail($id);
+       $category = Category::findOrFail($id);
         $category->update($request->all());
-        
-        // error_log($blog);
 
         return response()->json([
             "message"=>200,
-            "category"=>$category,
+            "category"=>$category
         ]);
     }
 
@@ -89,7 +98,7 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function categoryDestroy($id)
     {
         $category = Category::findOrFail($id);
         
