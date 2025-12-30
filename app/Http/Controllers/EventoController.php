@@ -213,6 +213,7 @@ class EventoController extends Controller
             return $event;
         });
         //agregamos si el cliente asisitio al evento
+        $asistencia = null;
         foreach ($events as $event) {
             $asistencia = DB::table('eventos_clientes') 
                 ->where('event_id', $event->id)
