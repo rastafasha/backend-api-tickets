@@ -584,6 +584,20 @@ $status,
         ], 200);
     }
 
+     public function pagosYear(Request $request, $year)
+    {
+        $payments = Payment::whereYear('created_at', $year)
+        ->orderBy('created_at', 'DESC')
+        ->get();
+
+        return response()->json([
+            'code' => 200,
+            'status' => 'success',
+            "payments" => $payments,
+            // "events" => eventCollection::make($events),
+        ], 200);
+    }
+
 
 
     /**

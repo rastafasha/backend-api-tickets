@@ -24,6 +24,9 @@ Route::get('payment/recientes/', [AdminPaymentController::class, 'recientes'])
 Route::get('payment/pendientes', [AdminPaymentController::class, 'pagosPendientes'])
     ->name('payment.pagosPendientes');
 
+Route::get('payment/year/{year}', [AdminPaymentController::class, 'pagosYear'])
+    ->name('payment.pagosYear');
+
 Route::get('payment/search/', [AdminPaymentController::class, 'search'])
     ->name('payment.search');
 

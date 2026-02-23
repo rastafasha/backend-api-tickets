@@ -25,8 +25,8 @@ class CompanyResource extends JsonResource
                 "code"=>$this->resource->pais->code,
             ]:NULL,
             "description"=>$this->resource->description,
-            "avatar"=> $this->resource->avatar ? env("APP_URL")."storage/".$this->resource->avatar : null,
-            // "avatar"=> $this->resource->avatar ? env("APP_URL").$this->resource->avatar : null,
+            // "avatar"=> $this->resource->avatar ? env("APP_URL")."storage/".$this->resource->avatar : null,
+            "avatar"=> $this->resource->avatar ? env("APP_URL").$this->resource->avatar : null,
             
             
             "users"=>$this->resource->user ? [
