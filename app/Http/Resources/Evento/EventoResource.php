@@ -26,6 +26,7 @@ class EventoResource extends JsonResource
             "status"=>$this->resource->status,
             "tickets_disponibles"=>$this->resource->tickets_disponibles,
             "is_featured"=>$this->resource->is_featured,
+            "lugar"=>$this->resource->lugar,
             "company_id"=>$this->resource->company_id,
             "company"=>$this->resource->company ? [
                 "id"=>$this->resource->company->id,

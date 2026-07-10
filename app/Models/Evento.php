@@ -25,6 +25,7 @@ class Evento extends Model
         'pais_id',
         'category_id',
         'pais',
+        'lugar',
     ];
 
 

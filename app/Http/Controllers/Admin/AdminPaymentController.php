@@ -3,21 +3,20 @@
 namespace App\Http\Controllers\Admin;
 
 
+use App\Helpers\Uploader;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\Payment\PaymentCollection;
+use App\Mail\EnrollmentNotificationMail;
 use App\Models\Cliente;
-use Carbon\Carbon;
 use App\Models\Evento;
 use App\Models\Payment;
-use App\Models\Ticket;
 use App\Models\Tasabcv;
-use App\Helpers\Uploader;
+use App\Models\Ticket;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
-
-use App\Mail\EnrollmentNotificationMail;
-use App\Http\Resources\Appointment\Payment\PaymentCollection;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class AdminPaymentController extends Controller
@@ -60,8 +59,8 @@ $status,
                     
         return response()->json([
             "total"=>$payments->total(),
-            "payments" => $payments ,
-            // "payments" => PaymentCollection::make($payments) ,
+            // "payments" => $payments ,
+            "payments" => PaymentCollection::make($payments) ,
             
         ]);  
     }
