@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\Evento\EventoCollection;
 use App\Models\Category;
 use App\Models\Evento;
 use Illuminate\Http\Request;
@@ -68,7 +69,8 @@ class CategoryController extends Controller
 
         return response()->json([
             "category" => $category,
-            "events" => $events,
+            // "events" => $events,
+            "events" => EventoCollection::make($events),
             
         ]);
     }

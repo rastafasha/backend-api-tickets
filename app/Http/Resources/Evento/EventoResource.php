@@ -4,6 +4,7 @@ namespace App\Http\Resources\Evento;
 
 use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 
 class EventoResource extends JsonResource
 {
@@ -42,8 +43,9 @@ class EventoResource extends JsonResource
                 "name"=>$this->resource->category->name,
             ]:NULL,
             // "avatar"=> $this->resource->avatar ? env("APP_URL")."storage/".$this->resource->avatar : null,
-            "avatar"=> $this->resource->avatar ? env("APP_URL").$this->resource->avatar : null,
-            
+            // "avatar"=> $this->resource->avatar ? env("APP_URL").$this->resource->avatar : null,
+            "avatar" => $this->resource->avatar ? url(Storage::url($this->resource->avatar)) : null,
+
             "fecha_inicio"=>$this->resource->fecha_inicio ? Carbon::parse($this->resource->fecha_inicio)->format("Y/m/d") : NULL,
             "fecha_fin"=>$this->resource->fecha_fin ? Carbon::parse($this->resource->fecha_fin)->format("Y/m/d") : NULL,
             

@@ -243,14 +243,7 @@ class EventoController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // $event_is_valid = Evento::where("id", "<>", $id)->where("n_doc", $request->n_doc)->first();
-
-        // if($event_is_valid){
-        //     return response()->json([
-        //         "message"=>403,
-        //         "message_text"=> 'el paciente ya existe'
-        //     ]);
-        // }
+        
         
         $event = Evento::findOrFail($id);
         if($request->hasFile('imagen')){
@@ -385,7 +378,8 @@ class EventoController extends Controller
         return response()->json([
             'code' => 200,
             'status' => 'success',
-            "eventos" => $eventos,
+            // "eventos" => $eventos,
+            "eventos" => EventoCollection::make($eventos),
         ], 200);
     }
     public function destacados(){
@@ -395,7 +389,8 @@ class EventoController extends Controller
         return response()->json([
             'code' => 200,
             'status' => 'success',
-            "eventos" => $eventos,
+            // "eventos" => $eventos,
+            "eventos" => EventoCollection::make($eventos),
         ], 200);
     }
 

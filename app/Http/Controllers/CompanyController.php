@@ -111,10 +111,7 @@ class CompanyController extends Controller
             $request->request->add(["avatar"=>$path]);
         }
 
-        
         $company->update($request->all());
-
-       
 
         return response()->json([
             "message"=>200,
