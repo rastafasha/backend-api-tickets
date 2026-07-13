@@ -12,6 +12,9 @@ Route::get('payment', [AdminPaymentController::class, 'index'])
 Route::get('payment/show/{payment}', [AdminPaymentController::class, 'paymentShow'])
     ->name('payment.show');
 
+Route::get('payment/tienda/{company_id}', [AdminPaymentController::class, 'paymentShowTienda'])
+    ->name('payment.paymentShowTienda');
+
 Route::put('payment/update/{id}', [AdminPaymentController::class, 'paymentUpdate'])
     ->name('payment.update');
 
@@ -21,11 +24,17 @@ Route::delete('payment/destroy/{payment:id}', [AdminPaymentController::class, 'p
 Route::get('payment/recientes/', [AdminPaymentController::class, 'recientes'])
     ->name('payment.recientes');
 
+Route::get('payment/recientes/tienda/{company_id}', [AdminPaymentController::class, 'recientesTienda'])
+    ->name('payment.recientesTienda');
+
 Route::get('payment/pendientes', [AdminPaymentController::class, 'pagosPendientes'])
     ->name('payment.pagosPendientes');
 
 Route::get('payment/year/{year}', [AdminPaymentController::class, 'pagosYear'])
     ->name('payment.pagosYear');
+
+Route::get('payment/tienda/year/{company_id}/{year}', [AdminPaymentController::class, 'pagosYearTienda'])
+    ->name('payment.pagosYearTienda');
 
 Route::get('payment/search/', [AdminPaymentController::class, 'search'])
     ->name('payment.search');

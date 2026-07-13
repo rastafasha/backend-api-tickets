@@ -243,6 +243,45 @@ $status,
             "payment" => $payment,
         ], 200);
     }
+   
+
+       public function paymentShowTienda(Request $request, $company_id)
+    {
+        $payments = Payment::where("company_id", $company_id)
+        ->orderBy('created_at', 'DESC')
+        ->get();
+
+        return response()->json([
+            "payments" => $payments,
+        ]);
+    }
+
+     public function recientes()
+    {
+        $payments = Payment::orderBy('created_at', 'DESC')
+        ->paginate(10);
+        // ->get();
+
+        return response()->json([
+            'code' => 200,
+            'status' => 'success',
+            'payments' => $payments
+        ], 200);
+    }
+
+     public function recientesTienda($company_id)
+    {
+        $payments = Payment::where("company_id", $company_id)
+        ->orderBy('created_at', 'DESC')
+        ->paginate(10);
+        // ->get();
+
+        return response()->json([
+            'code' => 200,
+            'status' => 'success',
+            'payments' => $payments
+        ], 200);
+    }
 
     /**
      * Update the specified resource in storage.
@@ -309,18 +348,7 @@ $status,
     }
 
    
-    public function recientes()
-    {
-        $payments = Payment::orderBy('created_at', 'DESC')
-        ->paginate(10);
-        // ->get();
-
-        return response()->json([
-            'code' => 200,
-            'status' => 'success',
-            'payments' => $payments
-        ], 200);
-    }
+   
 
 
      public function search(Request $request){
@@ -586,6 +614,20 @@ $status,
      public function pagosYear(Request $request, $year)
     {
         $payments = Payment::whereYear('created_at', $year)
+        ->orderBy('created_at', 'DESC')
+        ->get();
+
+        return response()->json([
+            'code' => 200,
+            'status' => 'success',
+            "payments" => $payments,
+            // "events" => eventCollection::make($events),
+        ], 200);
+    }
+     public function pagosYearTienda(Request $request, $year, $company_id)
+    {
+        $payments = Payment::where("company_id", $company_id)
+        ->whereYear('created_at', $year)
         ->orderBy('created_at', 'DESC')
         ->get();
 

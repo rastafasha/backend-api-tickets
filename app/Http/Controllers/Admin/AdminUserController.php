@@ -37,7 +37,8 @@ class AdminUserController extends Controller
         $roles = Role::get();
         $users = User::orderBy('id', 'desc')
         ->with('roles')
-            ->get();
+        ->get();
+        $users->load('company');
 
             return response()->json([
                 'code' => 200,
@@ -67,12 +68,15 @@ class AdminUserController extends Controller
      */
     public function userShow($id)
     {
+        // 1. Busca el usuario o lanza error 404
         $user = User::findOrFail($id);
 
+        // 2. Carga la relación 'company' (equivalente al populate)
+        $user->load('company');
+
+        // 3. Retorna la respuesta con el Resource
         return response()->json([
-            // "user" => $user,
             "user" => UserResource::make($user)
-            
         ]);
     }
 
@@ -202,16 +206,16 @@ class AdminUserController extends Controller
         ], 200);
     }
 
-    public function porEmpresa($request)
+    public function porEmpresa($company_id)
     {
         $users = User::orderBy('created_at', 'DESC')
-        ->where('empresa', $request)
+        ->where('company_id', $company_id)
         ->get();
-
+        $users->load('company');
         return response()->json([
             'code' => 200,
             'status' => 'success',
-            'users' => $users
+            "users" => UserCollection::make($users)
         ], 200);
     }
 

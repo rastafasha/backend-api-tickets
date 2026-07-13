@@ -9,6 +9,8 @@ Route::get('events/activos/', [EventoController::class, 'activos'])->name('event
 Route::get('events/destacados/', [EventoController::class, 'destacados'])->name('event.destacados');
 Route::get('event/show/{id}', [EventoController::class, 'show'])->name('event.show');
 
+Route::get('event/tienda/{company_id}', [EventoController::class, 'eventShowTienda'])->name('paymentmethod.eventShowTienda');
+
 Route::get('event/clientsbyEvent/{id}', [EventoController::class, 'clientsbyEvent'])->name('event.clientsbyEvent');
 
 Route::get('event/userbyEvent/{id}', [EventoController::class, 'userbyEvent'])->name('event.userbyEvent');

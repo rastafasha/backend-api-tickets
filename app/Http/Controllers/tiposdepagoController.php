@@ -71,6 +71,19 @@ class tiposdepagoController extends Controller
         ], 200);
     }
 
+   
+
+    public function paymentShowTienda(Request $request, $company_id)
+    {
+        $tiposdepago = Tiposdepago::where("company_id", $company_id)
+        ->orderBy('created_at', 'DESC')
+        ->get();
+
+        return response()->json([
+            "tiposdepago" => $tiposdepago,
+        ]);
+    }
+
     /**
      * Show the form for editing the specified resource.
      *

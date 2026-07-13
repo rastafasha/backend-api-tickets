@@ -6,6 +6,8 @@ use App\Http\Controllers\ClienteController;
 
 Route::get('clients', [ClienteController::class, 'index'])->name('client.index');
 Route::get('client/show/{id}', [ClienteController::class, 'show'])->name('client.show');
+Route::get('client/tienda/{company_id}', [ClienteController::class, 'clientShowTienda'])
+    ->name('paymentmethod.clientShowTienda');
 
 Route::get('client/search/{request}', [ClienteController::class, 'search'])
     ->name('client.search');

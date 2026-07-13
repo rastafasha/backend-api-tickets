@@ -42,7 +42,18 @@ class UserResource extends JsonResource
             "avatar"=> $this->resource->avatar ? env("APP_URL").$this->resource->avatar : null,
             
             "eventos"=>$this->resource->eventos,
-            "company"=>$this->resource->company,
+            "company_id" => $this->whenLoaded('company', fn() => $this->company->first()?->id),
+            "company" => $this->whenLoaded('company', function () {
+                $firstCompany = $this->company->first();
+                
+                if (!$firstCompany) return null;
+
+                return [
+                    "id" => $firstCompany->id,
+                    "name" => $firstCompany->name,
+                ];
+            }),
+
             "roles"=>$this->resource->roles->first(),
             "created_at"=>$this->resource->created_at ? Carbon::parse($this->resource->created_at)->format("Y/m/d") : NULL,
             

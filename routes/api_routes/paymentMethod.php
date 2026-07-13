@@ -17,6 +17,9 @@ Route::post('paymentmethods/store', [tiposdepagoController::class, 'paymentStore
 Route::get('paymentmethods/show/{tipodepago:id}', [tiposdepagoController::class, 'paymentShow'])
     ->name('paymentmethod.show');
 
+Route::get('paymentmethods/tienda/{company_id}', [tiposdepagoController::class, 'paymentShowTienda'])
+    ->name('paymentmethod.paymentShowTienda');
+
 Route::put('paymentmethods/update/{id}', [tiposdepagoController::class, 'paymentUpdate'])
     ->name('paymentmethod.update');
 

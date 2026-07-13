@@ -25,6 +25,26 @@ class TasaBcvController extends Controller
             'tasabcvs' => $tasabcvs,
         ], 200);
     }
+    public function ultimatasa()
+{
+    // Usamos first() en lugar de get() para traer solo el registro más reciente
+    $tasabcv = Tasabcv::orderBy('created_at', 'DESC')->first();
+
+    // Verificamos si existe al menos una tasa para evitar enviar nulos inesperados
+    if (!$tasabcv) {
+        return response()->json([
+            'code' => 404,
+            'status' => 'No se encontraron tasas registradas',
+            'tasabcv' => null,
+        ], 404);
+    }
+
+    return response()->json([
+        'code' => 200,
+        'status' => 'Última tasa obtenida con éxito',
+        'tasabcv' => $tasabcv,
+    ], 200);
+}
 
     /**
      * Store a newly created resource in storage.

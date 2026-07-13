@@ -72,7 +72,8 @@ class EventoController extends Controller
             'fecha_fin' => 'nullable|date|after_or_equal:fecha_inicio',
             'precio_estudiantes' => 'nullable|numeric|min:0',
             'precio_especialistas' => 'nullable|numeric|min:0',
-            'status' => 'nullable|in:ACTIVE,INACTIVE,RETIRED,FINISHED',
+            'status' => 'nullable|in:PUBLISHED,INACTIVE,RETIRED,FINISHED',
+            'lugar' => 'nullable',
             'user_id' => 'nullable|exists:users,id',
         ]);
 
@@ -161,6 +162,17 @@ class EventoController extends Controller
         ]);
 
        
+    }
+
+     public function eventShowTienda(Request $request, $company_id)
+    {
+        $events = Evento::where("company_id", $company_id)
+        ->orderBy('created_at', 'DESC')
+        ->get();
+
+        return response()->json([
+            "events" => $events,
+        ]);
     }
 
     public function clientsbyEvent(Request $request, $event_id)

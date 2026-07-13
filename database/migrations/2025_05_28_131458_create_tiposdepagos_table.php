@@ -15,6 +15,7 @@ class CreateTiposdepagosTable extends Migration
     {
         Schema::create('tiposdepagos', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->unsignedBigInteger('company_id')->nullable();
             $table->string('tipo', 250);
             $table->string('ciorif', 250)->nullable();
             $table->string('telefono', 250)->nullable();

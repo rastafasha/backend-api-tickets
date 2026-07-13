@@ -116,6 +116,7 @@ class UserSeeder extends Seeder
                 'surname' => 'Johnson',
                 "email" => "partner@partner.com",
                 'gender' => 1,
+                'company_id' => 1,
                 "password" => bcrypt("password"),
                 'roles' => [
                     [

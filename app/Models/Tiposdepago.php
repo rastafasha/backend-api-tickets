@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Company;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -25,6 +26,7 @@ class Tiposdepago extends Model
         'ciorif',
         'telefono',
         'status',
+        'company_id',
     ];
 
     const ACTIVE = 'ACTIVE';
@@ -35,6 +37,11 @@ class Tiposdepago extends Model
         return [
             self::ACTIVE, self::INACTIVE
         ];
+    }
+
+     public function company()
+    {
+        return $this->belongsTo(Company::class, 'company_id');
     }
 
 }

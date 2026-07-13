@@ -16,30 +16,30 @@ class CompanyResource extends JsonResource
     public function toArray($request)
     {
         return [
-            "id"=>$this->resource->id,
-            "name"=>$this->resource->name,
-            "pais_id"=>$this->resource->pais_id,
-            "pais"=>$this->resource->pais ? [
-                "id"=>$this->resource->pais->id,
-                "title"=>$this->resource->pais->title,
-                "code"=>$this->resource->pais->code,
-            ]:NULL,
-            "description"=>$this->resource->description,
+            "id" => $this->resource->id,
+            "name" => $this->resource->name,
+            "pais_id" => $this->resource->pais_id,
+            "pais" => $this->resource->pais ? [
+                "id" => $this->resource->pais->id,
+                "title" => $this->resource->pais->title,
+                "code" => $this->resource->pais->code,
+            ] : NULL,
+            "description" => $this->resource->description,
             // "avatar"=> $this->resource->avatar ? env("APP_URL")."storage/".$this->resource->avatar : null,
-            "avatar"=> $this->resource->avatar ? env("APP_URL").$this->resource->avatar : null,
-            
-            
-            "users"=>$this->resource->user ? [
-                "id"=>$this->resource->user->id,
-                "full_name"=> $this->resource->user->name.' '.$this->resource->user->surname,
-                ]:NULL,
-                "eventos"=>$this->resource->evento ? [
-                    "id"=>$this->resource->evento->id,
-                    "name"=>$this->resource->evento->name,
-                    ]:NULL,
-                    
-                    "created_at"=>$this->resource->created_at ? Carbon::parse($this->resource->created_at)->format("Y-m-d h:i A") : NULL,
-          
+            "avatar" => $this->resource->avatar ? env("APP_URL") . $this->resource->avatar : null,
+
+
+            "users" => $this->resource->user ? [
+                "id" => $this->resource->user->id,
+                "full_name" => $this->resource->user->name . ' ' . $this->resource->user->surname,
+            ] : NULL,
+            "eventos" => $this->resource->evento ? [
+                "id" => $this->resource->evento->id,
+                "name" => $this->resource->evento->name,
+            ] : NULL,
+
+            "created_at" => $this->resource->created_at ? Carbon::parse($this->resource->created_at)->format("Y-m-d h:i A") : NULL,
+
 
         ];
     }

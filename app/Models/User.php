@@ -42,7 +42,8 @@ class User extends Authenticatable implements JWTSubject
         'email_verified_at',
         'password',
         'event_id',
-        'empresa',
+        'company_id',
+        'company',
 
     ];
 
@@ -152,6 +153,7 @@ class User extends Authenticatable implements JWTSubject
         return $this->belongsToMany(Company::class, 'company_users', 'user_id', 'company_id');
     }
     
+ 
 
 
 }

@@ -11,7 +11,7 @@ Route::get('users', [AdminUserController::class, 'index'])
     
 Route::get('users/config/', [AdminUserController::class, 'config'])
     ->name('users.config');
-Route::get('users/porEmpresa/{user_empresa}', [AdminUserController::class, 'porEmpresa'])
+Route::get('users/porEmpresa/{company_id}', [AdminUserController::class, 'porEmpresa'])
     ->name('users.porEmpresa');
 
 Route::get('user/show/{user}', [AdminUserController::class, 'userShow'])

@@ -2,15 +2,16 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
-use App\Models\Student;
 use App\Jobs\PaymentRegisterJob;
 use App\Mail\NewPaymentRegisterMail;
-use Illuminate\Support\Facades\Mail;
 use App\Models\Appointment\Appointment;
+use App\Models\Company;
+use App\Models\Student;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\Mail;
 
 class Payment extends Model
 {
@@ -37,7 +38,8 @@ class Payment extends Model
         'status',
         'deuda',
         'monto_pendiente',
-        'status_deuda'
+        'status_deuda',
+        'company_id'
     ];
 
     const APPROVED = 'APPROVED';
@@ -93,6 +95,10 @@ class Payment extends Model
     public function client()
     {
         return $this->belongsTo(Cliente::class, 'client_id');
+    }
+    public function company()
+    {
+        return $this->belongsTo(Company::class, 'company_id');
     }
     public function events()
     {

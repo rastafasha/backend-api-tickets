@@ -75,6 +75,17 @@ class ClienteController extends Controller
         ]);
     }
 
+     public function clientShowTienda(Request $request, $company_id)
+    {
+        $clientes = Cliente::where("company_id", $company_id)
+        ->orderBy('created_at', 'DESC')
+        ->get();
+
+        return response()->json([
+            "clientes" => $clientes,
+        ]);
+    }
+
     /**
      * Update the specified resource in storage.
      *
