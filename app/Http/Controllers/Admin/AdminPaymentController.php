@@ -33,6 +33,7 @@ class AdminPaymentController extends Controller
     {
         
         $metodo = $request->metodo;
+        $metodo_id = $request->metodo_id;
         $search_referencia = $request->search_referencia;
         $bank_name = $request->bank_name;
         $bank_destino = $request->bank_destino;
@@ -48,6 +49,7 @@ class AdminPaymentController extends Controller
         $bank_name, $bank_destino,
         $monto,
         $metodo,
+        $metodo_id,
         $nombre,
         $fecha,
         $deuda,
@@ -114,7 +116,7 @@ $status,
         }
 
         $monto = $request->input('monto');
-        $metodo = $request->input('metodo');
+        $metodo_id = $request->input('metodo_id');
 
         // Remove commas from monto string to allow numeric check
         $monto = str_replace(',', '', $monto);
@@ -145,7 +147,7 @@ $status,
         }
 
         // Debug logs for troubleshooting
-        \Log::info("payDebtForEvent: originalMonto={$originalMonto}, adjustedMonto={$monto}, selectedPrice={$selected_price}, status_deuda={$status_deuda}, metodo={$metodo}");
+        \Log::info("payDebtForEvent: originalMonto={$originalMonto}, adjustedMonto={$monto}, selectedPrice={$selected_price}, status_deuda={$status_deuda}, metodo={$metodo_id}");
 
         // Create new payment record
         $payment = new Payment();
@@ -155,7 +157,7 @@ $status,
         $payment->status_deuda = $status_deuda;
 
         // $payment->status = 'PAID'; // Assuming payment status is PAID when payment is made
-        $payment->metodo = $metodo;
+        $payment->metodo_id = $metodo_id;
         $payment->referencia = $request->referencia;
         $payment->bank_name = $request->bank_name;
         $payment->bank_destino = $request->bank_destino;

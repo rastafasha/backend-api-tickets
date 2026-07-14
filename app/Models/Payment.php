@@ -7,6 +7,7 @@ use App\Mail\NewPaymentRegisterMail;
 use App\Models\Appointment\Appointment;
 use App\Models\Company;
 use App\Models\Student;
+use App\Models\Tiposdepago;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -25,7 +26,7 @@ class Payment extends Model
     protected $fillable = [
 
         'referencia',
-        'metodo',
+        'metodo_id',
         'bank_name',
         'bank_destino',
         'monto',
@@ -107,6 +108,10 @@ class Payment extends Model
     public function event()
     {
         return $this->belongsTo(Evento::class, 'event_id');
+    }
+    public function metodo()
+    {
+        return $this->belongsTo(Tiposdepago::class, 'metodo_id');
     }
 
 
